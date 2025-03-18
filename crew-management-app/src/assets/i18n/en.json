@@ -1,0 +1,11 @@
+{
+  "HELLO": "Hello, crew-management-app",
+  "FIRST_NAME": "First Name",
+  "LAST_NAME": "Last Name",
+  "NATIONALITY": "Nationality",
+  "TITLE": "Title",
+  "DAYS_ON_BOARD": "Days On Board",
+  "DAILY_RATE": "Daily Rate",
+  "CURRENCY": "Currency",
+  "TOTAL_INCOME": "Total Income"
+}

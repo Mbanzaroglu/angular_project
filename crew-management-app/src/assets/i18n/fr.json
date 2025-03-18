@@ -1,0 +1,11 @@
+{
+  "HELLO": "Bonjour, crew-management-app",
+  "FIRST_NAME": "Prénom",
+  "LAST_NAME": "Nom de famille",
+  "NATIONALITY": "Nationalité",
+  "TITLE": "Titre",
+  "DAYS_ON_BOARD": "Jours à bord",
+  "DAILY_RATE": "Taux journalier",
+  "CURRENCY": "Devise",
+  "TOTAL_INCOME": "Revenu total"
+}
