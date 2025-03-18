@@ -1,0 +1,19 @@
+<div>
+  <h1>{{ 'HELLO' | translate }}</h1>
+  <div class="language-selector">
+    <mat-form-field appearance="outline">
+      <mat-label>Select Language</mat-label>
+      <mat-select (selectionChange)="switchLanguage($event)">
+        <mat-option *ngFor="let lang of translate.getLangs()" [value]="lang">
+          {{ lang.toUpperCase() }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+  <router-outlet></router-outlet>
+</div>
+
+
+<!-- <select (change)="switchLanguage($event)">
+  <option *ngFor="let lang of translate.getLangs()" [value]="lang">{{ lang }}</option>
+</select>    -->

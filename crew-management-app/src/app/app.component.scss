@@ -1,0 +1,6 @@
+.language-selector {
+  position: absolute;
+  top: 10px; /* Üstten 10 piksel boşluk bırakır */
+  right: 10px; /* Sağdan 10 piksel boşluk bırakır */
+  z-index: 1000; /* Diğer öğelerin üstünde görünmesini sağlar */
+}
