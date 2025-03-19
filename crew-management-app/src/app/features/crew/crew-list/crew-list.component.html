@@ -1,5 +1,5 @@
 <div class="crew-list">
-    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+    <table mat-table [dataSource]="dataSource$" class="mat-elevation-z8">
       <!-- First Name Column -->
       <ng-container matColumnDef="firstName">
         <th mat-header-cell *matHeaderCellDef> {{ 'FIRST_NAME' | translate }} </th>
@@ -69,9 +69,8 @@
   
     <div class="summary">
       <h3>Total Income by Currency</h3>
-      <div *ngFor="let summary of incomeSummary">
+      <div *ngFor="let summary of (incomeSummary$ | async)">
         {{summary.currency}}: {{summary.totalIncome}}
       </div>
     </div>
   </div>
-  
