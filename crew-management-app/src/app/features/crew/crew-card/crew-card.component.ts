@@ -1,11 +1,18 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-crew-card',
-  imports: [],
+  standalone: true,
   templateUrl: './crew-card.component.html',
-  styleUrl: './crew-card.component.scss'
+  styleUrls: ['./crew-card.component.scss'],
+  imports: []
 })
-export class CrewCardComponent {
+export class CrewCardComponent implements OnInit {
+  constructor(private route: ActivatedRoute) {}
 
+  ngOnInit(): void {
+    const id = this.route.snapshot.paramMap.get('id'); // URL'deki ID'yi al
+    console.log('Crew Member ID:', id);
+  }
 }

@@ -12,6 +12,7 @@ import { IncomeSummary } from '@models/income-summary.model';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { get } from 'node:http';
 import { CertificateModalComponent } from 'app/features/certificate/certificate-modal/certificate-modal.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-crew-list',
@@ -39,7 +40,10 @@ export class CrewListComponent implements OnInit {
     // Kur farkı (örnek olarak 1 USD = 0.85 EUR)
   exchangeRate = 0.85;
 
-  constructor(private crewService: CrewService, private dialog: MatDialog, public translate: TranslateService) {
+  constructor(private crewService: CrewService, 
+          private dialog: MatDialog, 
+          public translate: TranslateService, 
+          private router: Router) {
     
   }
 
@@ -92,6 +96,7 @@ export class CrewListComponent implements OnInit {
 
 
   navigateToCrewCard(element: CrewMember) {
-    // Navigasyon fonksiyonu
+    // CrewMember ID'sini URL parametresi olarak geçirerek yönlendirme yap
+    this.router.navigate(['/crew-card', element.id]);
   }
 }

@@ -5,6 +5,6 @@ import { CrewCardComponent } from './crew-card/crew-card.component';
 export const crewRoutes: Routes = [
   { path: '', redirectTo: 'crew-list', pathMatch: 'full' }, // Doğru yönlendirme
   { path: 'crew-list', component: CrewListComponent },
-  { path: 'crew-card', component: CrewCardComponent }
+  { path: 'crew-card/:id', component: CrewCardComponent }
 ];
 
