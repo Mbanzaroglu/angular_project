@@ -91,6 +91,13 @@ export class CrewService {
     console.log('Crew member added. Updated crew list:', this.crewList);
   }
 
+  // Yeni metod: Crew listesini güncelle
+  updateCrewList(updatedCrewList: CrewMember[]): void {
+    this.crewList = updatedCrewList;
+    this.crewListSubject.next(this.crewList);
+    console.log('Crew list updated:', this.crewList);
+  }
+
   // Yeni metod: Nationality listesini döndür
   getNationalities(): Observable<string[]> {
     return of(this.nationalityList);

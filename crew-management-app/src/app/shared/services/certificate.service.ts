@@ -53,17 +53,8 @@ export class CertificateService {
 
   getCertificatesByCrewMember(crewMemberId: number): Observable<Certificate[]> {
     console.log(`Fetching certificates for crew member ID: ${crewMemberId}`);
-    let crewCertificates: Certificate[] = [];
-    this.crewService.getCrewList().subscribe(crewList => {
-      const crewMember = crewList.find(member => member.id === crewMemberId);
-      if (crewMember) {
-        const crewCertIds = crewMember.certificates;
-        crewCertificates = this.certificates.filter(cert => crewCertIds.includes(cert.id));
-        console.log(`Certificates for crew member ${crewMemberId}:`, crewCertificates);
-      } else {
-        console.log(`Crew member with ID ${crewMemberId} not found.`);
-      }
-    });
+    const crewCertificates = this.certificates.filter(cert => cert.crewMemberId === crewMemberId);
+    console.log(`Certificates for crew member ${crewMemberId}:`, crewCertificates);
     return of(crewCertificates);
   }
 
@@ -74,18 +65,32 @@ export class CertificateService {
 
   addCertificate(newCertificate: Certificate): void {
     console.log('Adding new certificate:', newCertificate);
-    this.certificates.push({ ...newCertificate, id: this.certificates.length + 1 });
+    this.certificates.push(newCertificate);
     console.log('Certificate added. Updated certificates list:', this.certificates);
+
+    // CrewMember'ın certificates array'ini güncelle
+    this.crewService.getCrewList().subscribe(crewList => {
+      const crewMember = crewList.find(member => member.id === newCertificate.crewMemberId);
+      if (crewMember) {
+        crewMember.certificates = [
+          ...crewMember.certificates,
+          newCertificate.id
+        ];
+        // CrewService'in crewListSubject'ini güncelle
+        this.crewService.updateCrewList(crewList);
+      }
+    });
+
+    // Sertifikaların atandığını bildir
+    this.certificatesAssignedSubject.next(true);
   }
 
-  // Yeni metod: Sertifika türü ekleme
   addCertificateType(newCertificateType: CertificateType): void {
     console.log('Adding new certificate type:', newCertificateType);
     this.certificateTypes.push(newCertificateType);
     console.log('Certificate type added. Updated certificate types list:', this.certificateTypes);
   }
 
-  // Sertifika türlerini almak için metod
   getCertificateTypes(): Observable<CertificateType[]> {
     console.log('Fetching all certificate types...');
     return of(this.certificateTypes);
