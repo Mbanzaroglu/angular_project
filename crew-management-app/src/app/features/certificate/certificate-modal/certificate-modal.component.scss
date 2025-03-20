@@ -1,0 +1,18 @@
+table {
+  width: 100%; /* Tablo genişliği */
+}
+
+th, td {
+  text-align: left;
+  padding: 8px;
+}
+
+ng-container[matColumnDef="issueDate"], 
+ng-container[matColumnDef="expiryDate"] {
+  white-space: nowrap; /* Tarihlerin satır kaydırmasını engeller */
+  width: 30%; /* Tarih sütunları için sabit genişlik */
+}
+
+.mat-header-cell, .mat-cell {
+  font-size: 0.9rem; /* Yazı boyutunu küçült */
+}
