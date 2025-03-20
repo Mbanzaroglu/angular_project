@@ -12,7 +12,7 @@ import { IncomeSummary } from '@models/income-summary.model';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { get } from 'node:http';
 import { CertificateModalComponent } from 'app/features/certificate/certificate-modal/certificate-modal.component';
-import { Router } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 
 @Component({
   selector: 'app-crew-list',
@@ -26,6 +26,7 @@ import { Router } from '@angular/router';
     MatIconModule,
     MatButtonModule,
     TranslateModule,
+    RouterModule
   ]
 })
 export class CrewListComponent implements OnInit {
@@ -96,7 +97,12 @@ export class CrewListComponent implements OnInit {
 
 
   navigateToCrewCard(element: CrewMember) {
-    // CrewMember ID'sini URL parametresi olarak geçirerek yönlendirme yap
-    this.router.navigate(['/crew-card', element.id]);
+    console.log('Navigating to crew-card with ID:', element.id);
+    this.router.navigate(['/crew', 'crew-card', element.id]).then(success => {
+      console.log('Navigation success:', success); // Yönlendirme başarılı mı?
+      if (!success) {
+        console.error('Navigation failed! Check route configuration.');
+      }
+    });
   }
 }

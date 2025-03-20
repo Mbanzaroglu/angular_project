@@ -20,12 +20,6 @@ export class CrewService {
   private crewListSubject = new BehaviorSubject<CrewMember[]>(this.crewList);
   crewList$ = this.crewListSubject.asObservable(); // Observable olarak dışa aç
 
-  // Gelir özeti
-  private incomeSummary: IncomeSummary[] = [
-    { currency: 'USD', totalIncome: 81900 },
-    { currency: 'EUR', totalIncome: 54200 }
-  ];
-
   // Döviz kuru (örnek olarak 1 EUR = 1.1 USD)
   private exchangeRate: number = 0.85;
 
