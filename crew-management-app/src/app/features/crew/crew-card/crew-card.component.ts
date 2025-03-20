@@ -1,4 +1,3 @@
-// crew-card.component.ts
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
@@ -9,8 +8,10 @@ import { CertificateService } from '@services/certificate.service';
 import { MatListModule } from '@angular/material/list';
 import { CrewMember } from '@shared/models/crew-member.model';
 import { Certificate } from '@models/certificate.model';
-import { MatIcon, MatIconModule } from '@angular/material/icon';
+import { MatIconModule } from '@angular/material/icon';
 import { TranslateModule } from '@ngx-translate/core';
+import { MatDialog } from '@angular/material/dialog';
+import { AddCertificateModalComponent } from '../../certificate/add-certificate-modal/add-certificate-modal.component';
 
 @Component({
   selector: 'app-crew-card',
@@ -23,21 +24,21 @@ import { TranslateModule } from '@ngx-translate/core';
     MatCardModule,
     MatListModule,
     MatIconModule,
-    TranslateModule,
-    // Başka Material modülleri (MatFormField, MatInput vb.) ekleyebilirsiniz
+    TranslateModule
   ]
 })
 export class CrewCardComponent implements OnInit {
   id: number = 0;
   crewMember: CrewMember | undefined;
   crewCertificates: Certificate[] = [];
+  selectedTabIndex: number = 0; // Varsayılan olarak ilk sekme (Crew Details) seçili
 
   constructor(
     private route: ActivatedRoute,
     private crewService: CrewService,
     private certificateService: CertificateService,
     private router: Router,
-    private translate: TranslateModule
+    private dialog: MatDialog
   ) {
     console.log('CrewCardComponent constructor called');
   }
@@ -54,12 +55,36 @@ export class CrewCardComponent implements OnInit {
     });
 
     // Sertifikaları getir
+    this.loadCertificates();
+  }
+
+  loadCertificates(): void {
     this.certificateService.getCertificatesByCrewMember(this.id).subscribe(certificates => {
       this.crewCertificates = certificates;
       console.log('Crew Certificates:', this.crewCertificates);
     });
   }
+
   navigateToCrewList(): void {
     this.router.navigate(['/crew-list']);
+  }
+
+  openAddCertificateModal(): void {
+    const dialogRef = this.dialog.open(AddCertificateModalComponent, {
+      width: '600px',
+      data: { crewMemberId: this.id }
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.certificateService.addCertificate(result);
+        this.loadCertificates(); // Sertifika listesini güncelle
+      }
+    });
+  }
+  // Sekme değiştiğinde çağrılacak metod
+  onTabChange(index: number): void {
+    this.selectedTabIndex = index;
+    console.log('Selected tab index:', this.selectedTabIndex);
   }
 }

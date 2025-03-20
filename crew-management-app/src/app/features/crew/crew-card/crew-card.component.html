@@ -1,10 +1,15 @@
 <div class="crew-card-container">
-  <!-- Back Button -->
-  <button mat-button class="back-button" (click)="navigateToCrewList()">
-    <mat-icon>arrow_back</mat-icon> {{ 'BACK_TO_CREW_LIST' | translate }}
-  </button>
+  <!-- Back Button ve Add Certificate Button -->
+  <div class="header-actions">
+    <button mat-button class="back-button" (click)="navigateToCrewList()" aria-label="Back to crew list">
+      <mat-icon>arrow_back</mat-icon> {{ 'BACK_TO_CREW_LIST' | translate }}
+    </button>
+    <button *ngIf="selectedTabIndex === 1" mat-button class="add-certificate-button" (click)="openAddCertificateModal()" aria-label="Add a new certificate">
+      <mat-icon>add</mat-icon> {{ 'ADD_CERTIFICATE' | translate }}
+    </button>
+  </div>
 
-  <mat-tab-group>
+  <mat-tab-group (selectedIndexChange)="onTabChange($event)" [selectedIndex]="selectedTabIndex">
     <!-- Crew Details Tab -->
     <mat-tab label="{{ 'CREW_DETAILS' | translate }}">
       <mat-card class="crew-card">

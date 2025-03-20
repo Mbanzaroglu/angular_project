@@ -4,22 +4,42 @@
   position: relative;
 }
 
-/* Mat-tab-group ve içindeki içeriği kontrol etmek için */
-::ng-deep mat-tab-group {
-  max-width: 900px;
-  margin: 3rem auto 0 auto;
-}
-
-/* Mat-tab-body içeriğini tam genişlik yapmak için */
-::ng-deep .mat-tab-body-content {
+.header-actions {
   display: flex;
-  justify-content: center;
-  width: 100%;
-  max-width: 900px;
-  margin: 0 auto;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding: 0 0.5rem;
 }
 
-/* Crew Card için genişlik ayarı */
+.back-button,
+.add-certificate-button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1rem;
+  color: #1976d2; /* Mavi renk, Back butonuyla aynı */
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem 1rem;
+  transition: background-color 0.3s, color 0.3s;
+  border-radius: 4px;
+}
+
+.back-button:hover,
+.add-certificate-button:hover {
+  background-color: rgba(25, 118, 210, 0.1); /* Hafif mavi arka plan hover efekti */
+  color: #1565c0; /* Biraz daha koyu mavi */
+}
+
+.back-button mat-icon,
+.add-certificate-button mat-icon {
+  font-size: 1.2rem;
+  height: 1.2rem;
+  width: 1.2rem;
+}
+
 .crew-card {
   text-align: center;
   padding: 2rem;
@@ -29,7 +49,6 @@
   margin: 0 auto;
 }
 
-/* Certificates Container için genişlik ayarı */
 .certificates-container {
   text-align: center;
   margin-top: 1.5rem;
@@ -39,33 +58,13 @@
   margin: 0 auto;
 }
 
-/* Certificate Card için genişlik ayarı */
 .certificate-card {
   width: 100%;
-  max-width: 900px; /* 600px yerine tam genişlik */
+  max-width: 900px;
   box-sizing: border-box;
   margin: 1rem auto;
 }
 
-/* Back Button */
-.back-button {
-  position: relative;
-  top: 0;
-  left: 0;
-  margin: 0;
-  padding: 0.5rem 1rem;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: 1rem;
-  color: #1976d2;
-  background: none;
-  border: none;
-  cursor: pointer;
-  z-index: 10;
-}
-
-/* Diğer stiller */
 .crew-card-header {
   display: flex;
   justify-content: center;
@@ -104,4 +103,3 @@
   font-size: 1.8rem;
   font-weight: bold;
 }
-
