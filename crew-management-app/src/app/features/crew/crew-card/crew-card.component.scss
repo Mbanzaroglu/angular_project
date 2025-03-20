@@ -1,0 +1,83 @@
+.crew-card-container {
+    margin: 2rem auto;
+    max-width: 900px;
+    position: relative;
+  }
+  
+  /* Back Button'u sola hizala ve üst padding ile tam konumlandır */
+  .back-button {
+    position: relative;
+    top: 0;
+    left: 0;
+    margin: 0;
+    padding: 0.5rem 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 1rem;
+    color: #1976d2;
+    background: none;
+    border: none;
+    cursor: pointer;
+    z-index: 10;
+  }
+  
+  /* Mat-tab başlıkları ile hizalama */
+  mat-tab-group {
+    margin-top: 3rem; /* Back butonu ile uyumlu olacak şekilde boşluk bırak */
+  }
+  
+  .crew-card {
+    text-align: center;
+    padding: 2rem;
+  }
+  
+  .crew-card-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+  }
+  
+  .crew-title h1 {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+  }
+  
+  .crew-title h3 {
+    font-size: 1.2rem;
+    font-weight: normal;
+    color: gray;
+  }
+  
+  .crew-details {
+    margin-top: 1rem;
+  }
+  
+  .info-row {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+  }
+  
+  .info-row p {
+    margin: 0.5rem;
+    font-size: 1rem;
+  }
+  
+  .certificates-container {
+    text-align: center;
+    margin-top: 1.5rem;
+  }
+  
+  .certificates-container h2 {
+    font-size: 1.8rem;
+    font-weight: bold;
+  }
+  
+  .certificate-card {
+    margin: 1rem auto;
+    max-width: 600px;
+  }
+  
