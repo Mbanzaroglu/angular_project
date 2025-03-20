@@ -19,5 +19,9 @@
   "BACK_TO_CREW_LIST": "Voltar para a lista da tripulação",
   "CREW_DETAILS": "Detalhes da tripulação",
   "CREW_CERTIFICATES": "Certificados da tripulação",
-  "NO_CERTIFICATES": "Nenhum certificado encontrado para este membro da tripulação."
+  "NO_CERTIFICATES": "Nenhum certificado encontrado para este membro da tripulação.",
+  "ADD_NEW_CREW": "Adicionar nova tripulação",
+  "ADD_NEW_CERTIFICATE_TYPE": "Adicionar novo tipo de certificado",
+  "CANCEL": "Cancelar",
+  "SAVE": "Salvar"
 }
