@@ -1,6 +1,15 @@
 <div class="crew-list">
-  <table mat-table [dataSource]="dataSource$" class="mat-elevation-z8">
+  <!-- Sağ üst köşeye butonlar -->
+  <div class="action-buttons">
+    <button mat-raised-button color="primary" (click)="openAddCrewModal()">
+      {{ 'ADD_NEW_CREW' | translate }}
+    </button>
+    <button mat-raised-button color="accent" (click)="openAddCertificateTypeModal()" style="margin-left: 1rem;">
+      {{ 'ADD_NEW_CERTIFICATE_TYPE' | translate }}
+    </button>
+  </div>
 
+  <table mat-table [dataSource]="dataSource$" class="mat-elevation-z8">
     <!-- First Name Column -->
     <ng-container matColumnDef="firstName">
       <th mat-header-cell *matHeaderCellDef> {{ 'FIRST_NAME' | translate }} </th>
@@ -101,6 +110,5 @@
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
     <tr mat-footer-row *matFooterRowDef="displayedColumns"></tr>
-
   </table>
 </div>

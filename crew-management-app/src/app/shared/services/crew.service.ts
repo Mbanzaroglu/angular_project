@@ -7,7 +7,6 @@ import { IncomeSummary } from '@models/income-summary.model';
   providedIn: 'root'
 })
 export class CrewService {
-  // Örnek mürettebat verisi
   private crewList: CrewMember[] = [
     { id: 1, firstName: 'John', lastName: 'Doe', nationality: 'American', title: 'Captain', daysOnBoard: 120, dailyRate: 300, currency: 'USD', totalIncome: 36000, certificates: [] },
     { id: 2, firstName: 'Jane', lastName: 'Smith', nationality: 'British', title: 'Engineer', daysOnBoard: 90, dailyRate: 250, currency: 'EUR', totalIncome: 22500, certificates: [] },
@@ -16,55 +15,52 @@ export class CrewService {
     { id: 5, firstName: 'Liu', lastName: 'Wei', nationality: 'Chinese', title: 'Deckhand', daysOnBoard: 130, dailyRate: 180, currency: 'EUR', totalIncome: 23400, certificates: [] }
   ];
 
-  // **BehaviorSubject ile canlı veri kaynağı**
   private crewListSubject = new BehaviorSubject<CrewMember[]>(this.crewList);
-  crewList$ = this.crewListSubject.asObservable(); // Observable olarak dışa aç
+  crewList$ = this.crewListSubject.asObservable();
 
-  // Döviz kuru (örnek olarak 1 EUR = 1.1 USD)
   private exchangeRate: number = 0.85;
 
   constructor() {}
 
-  /**
-   * Mürettebat listesini Observable olarak döndür
-   */
   getCrewList(): Observable<CrewMember[]> {
-    return this.crewList$; // Artık BehaviorSubject üzerinden döndürülüyor
+    return this.crewList$;
   }
 
-  /**
-   * Gelir özetini Observable olarak döndür
-   */
   getIncomeSummary(): Observable<IncomeSummary[]> {
     const totalUSD = this.crewList.reduce((acc, member) => {
       if (member.currency === 'USD') {
-        return acc + member.totalIncome; // USD ise direkt ekle
+        return acc + member.totalIncome;
       } else {
-        return acc + member.totalIncome / this.exchangeRate; // EUR ise USD'ye çevirerek ekle
+        return acc + member.totalIncome / this.exchangeRate;
       }
     }, 0);
-  
+
     const totalEUR = this.crewList.reduce((acc, member) => {
       if (member.currency === 'EUR') {
-        return acc + member.totalIncome; // EUR ise direkt ekle
+        return acc + member.totalIncome;
       } else {
-        return acc + member.totalIncome * this.exchangeRate; // USD ise EUR'ya çevirerek ekle
+        return acc + member.totalIncome * this.exchangeRate;
       }
     }, 0);
-  
+
     const summary: IncomeSummary[] = [
       { currency: 'USD', totalIncome: totalUSD },
       { currency: 'EUR', totalIncome: totalEUR }
     ];
-  
+
     return new BehaviorSubject(summary).asObservable();
   }
 
-  /**
-   * Mürettebat üyesini ID'ye göre sil ve güncellenmiş listeyi yay (emit) et
-   */
   deleteCrewMember(id: number): void {
     this.crewList = this.crewList.filter(member => member.id !== id);
-    this.crewListSubject.next(this.crewList); // BehaviorSubject'i güncelle
+    this.crewListSubject.next(this.crewList);
+  }
+
+  // Yeni metod: Mürettebat üyesi ekleme
+  addCrewMember(newCrew: CrewMember): void {
+    console.log('Adding new crew member:', newCrew);
+    this.crewList.push(newCrew);
+    this.crewListSubject.next(this.crewList);
+    console.log('Crew member added. Updated crew list:', this.crewList);
   }
 }

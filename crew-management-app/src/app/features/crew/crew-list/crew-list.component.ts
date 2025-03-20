@@ -13,6 +13,9 @@ import { Observable, BehaviorSubject } from 'rxjs';
 import { get } from 'node:http';
 import { CertificateModalComponent } from 'app/features/certificate/certificate-modal/certificate-modal.component';
 import { Router, RouterModule } from '@angular/router';
+import { CrewModalComponent } from '../crew-modal/crew-modal.component';
+import { CertificateService } from '@shared/services/certificate.service';
+import { CertificateTypeModalComponent } from 'app/features/certificate/certificate-type-form/certificate-type-form.component';
 
 @Component({
   selector: 'app-crew-list',
@@ -44,7 +47,8 @@ export class CrewListComponent implements OnInit {
   constructor(private crewService: CrewService, 
           private dialog: MatDialog, 
           public translate: TranslateService, 
-          private router: Router) {
+          private router: Router,
+          private certificateService: CertificateService) {
     
   }
 
@@ -102,6 +106,36 @@ export class CrewListComponent implements OnInit {
       console.log('Navigation success:', success); // Yönlendirme başarılı mı?
       if (!success) {
         console.error('Navigation failed! Check route configuration.');
+      }
+    });
+  }
+
+  // Yeni metod: Add New Crew Modal'ı aç
+  openAddCrewModal() {
+    const dialogRef = this.dialog.open(CrewModalComponent, {
+      width: '600px'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.crewService.addCrewMember(result);
+        this.incomeSummary$ = this.crewService.getIncomeSummary();
+      }
+    });
+  }
+
+  // Yeni metod: Add New Certificate Type Modal'ı aç
+  openAddCertificateTypeModal() {
+    console.log('Opening Add Certificate Type Modal...');
+    const dialogRef = this.dialog.open(CertificateTypeModalComponent, {
+      width: '600px'
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('Add Certificate Type Modal closed. Result:', result);
+      if (result) {
+        console.log('Adding new certificate type:', result);
+        this.certificateService.addCertificateType(result);
       }
     });
   }

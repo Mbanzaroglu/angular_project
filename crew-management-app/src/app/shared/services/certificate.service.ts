@@ -33,15 +33,11 @@ export class CertificateService {
   private certificatesAssignedSubject = new BehaviorSubject<boolean>(false);
   certificatesAssigned$ = this.certificatesAssignedSubject.asObservable();
 
-  
   constructor(private crewService: CrewService) {
     console.log('CertificateService initialized');
     this.assignCertificatesToCrew();
   }
-  
-  /**
-   * Sertifikaları mürettebat üyelerine atar.
-   */
+
   assignCertificatesToCrew(): void {
     console.log('Assigning certificates to crew members...');
     this.crewService.getCrewList().subscribe(crewList => {
@@ -50,26 +46,17 @@ export class CertificateService {
         const assignedCertificates = this.certificates
           .filter(cert => cert.crewMemberId === crewMember.id)
           .map(cert => cert.id);
-
-        // console.log(`Certificates assigned to crew member ${crewMember.id}:`, assignedCertificates);
         crewMember.certificates = assignedCertificates;
       });
     });
   }
 
-  /**
-   * Belirtilen mürettebat üyesine ait sertifikaları döndürür.
-   * @param crewMemberId Mürettebat üyesinin ID'si
-   * @returns Observable<Certificate[]>
-   */
   getCertificatesByCrewMember(crewMemberId: number): Observable<Certificate[]> {
     console.log(`Fetching certificates for crew member ID: ${crewMemberId}`);
     let crewCertificates: Certificate[] = [];
     this.crewService.getCrewList().subscribe(crewList => {
-      // console.log('Crew list fetched:', crewList);
       const crewMember = crewList.find(member => member.id === crewMemberId);
       if (crewMember) {
-        // console.log(`Crew member found:`, crewMember);
         const crewCertIds = crewMember.certificates;
         crewCertificates = this.certificates.filter(cert => crewCertIds.includes(cert.id));
         console.log(`Certificates for crew member ${crewMemberId}:`, crewCertificates);
@@ -77,7 +64,6 @@ export class CertificateService {
         console.log(`Crew member with ID ${crewMemberId} not found.`);
       }
     });
-
     return of(crewCertificates);
   }
 
@@ -90,5 +76,18 @@ export class CertificateService {
     console.log('Adding new certificate:', newCertificate);
     this.certificates.push({ ...newCertificate, id: this.certificates.length + 1 });
     console.log('Certificate added. Updated certificates list:', this.certificates);
+  }
+
+  // Yeni metod: Sertifika türü ekleme
+  addCertificateType(newCertificateType: CertificateType): void {
+    console.log('Adding new certificate type:', newCertificateType);
+    this.certificateTypes.push(newCertificateType);
+    console.log('Certificate type added. Updated certificate types list:', this.certificateTypes);
+  }
+
+  // Sertifika türlerini almak için metod
+  getCertificateTypes(): Observable<CertificateType[]> {
+    console.log('Fetching all certificate types...');
+    return of(this.certificateTypes);
   }
 }
