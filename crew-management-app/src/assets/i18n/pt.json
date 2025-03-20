@@ -7,5 +7,13 @@
   "DAYS_ON_BOARD": "Dias a Bordo",
   "DAILY_RATE": "Taxa Diária",
   "CURRENCY": "Moeda",
-  "TOTAL_INCOME": "Rendimento Total"
+  "TOTAL_INCOME": "Rendimento Total",
+  "CERTIFICATES": {
+    "TITLE": "Certificados",
+    "NAME": "Nome",
+    "DESCRIPTION": "Descrição",
+    "ISSUE_DATE": "Data de emissão",
+    "EXPIRY_DATE": "Data de validade",
+    "CLOSE": "Fechar"
+  }
 }

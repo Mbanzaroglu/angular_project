@@ -7,5 +7,14 @@
   "DAYS_ON_BOARD": "Days On Board",
   "DAILY_RATE": "Daily Rate",
   "CURRENCY": "Currency",
-  "TOTAL_INCOME": "Total Income"
+  "TOTAL_INCOME": "Total Income",
+  "CERTIFICATES": {
+    "TITLE": "Certificates",
+    "NAME": "Name",
+    "DESCRIPTION": "Description",
+    "ISSUE_DATE": "Issue Date",
+    "EXPIRY_DATE": "Expiry Date",
+    "CLOSE": "Close"
+  }
+  
 }

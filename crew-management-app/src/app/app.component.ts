@@ -17,6 +17,12 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 })
 export class AppComponent {
   title = 'crew-management-app';
+  
+  languages = [
+    { code: 'en', label: 'English' },
+    { code: 'fr', label: 'French' },
+    { code: 'pt', label: 'Portuguese' }
+  ];
 
   constructor(public translate: TranslateService) {
     this.translate.addLangs(['en', 'fr', 'pt']);
@@ -25,7 +31,7 @@ export class AppComponent {
   }
 
   switchLanguage(event: MatSelectChange) {
-    const lang = event.value; // Seçilen dili al
+    const lang = event.value || 'en'; // Eğer event.value boşsa 'en' kullan
     this.translate.use(lang);  // Çeviri servisini güncelle
   }
     

@@ -1,1 +1,36 @@
-<p>certificate-modal works!</p>
+<h2 mat-dialog-title>{{ 'CERTIFICATES.TITLE' | translate }}</h2>
+
+<mat-dialog-content>
+  <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+    <!-- Sertifika Adı -->
+    <ng-container matColumnDef="name">
+      <th mat-header-cell *matHeaderCellDef> {{ 'CERTIFICATES.NAME' | translate }} </th>
+      <td mat-cell *matCellDef="let cert"> {{ cert.name }} </td>
+    </ng-container>
+
+    <!-- Açıklama -->
+    <ng-container matColumnDef="description">
+      <th mat-header-cell *matHeaderCellDef> {{ 'CERTIFICATES.DESCRIPTION' | translate }} </th>
+      <td mat-cell *matCellDef="let cert"> {{ cert.description }} </td>
+    </ng-container>
+
+    <!-- Veriliş Tarihi -->
+    <ng-container matColumnDef="issueDate">
+      <th mat-header-cell *matHeaderCellDef> {{ 'CERTIFICATES.ISSUE_DATE' | translate }} </th>
+      <td mat-cell *matCellDef="let cert"> {{ cert.issueDate }} </td>
+    </ng-container>
+
+    <!-- Son Kullanım Tarihi -->
+    <ng-container matColumnDef="expiryDate">
+      <th mat-header-cell *matHeaderCellDef> {{ 'CERTIFICATES.EXPIRY_DATE' | translate }} </th>
+      <td mat-cell *matCellDef="let cert"> {{ cert.expiryDate }} </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="closeModal()">{{ 'CERTIFICATES.CLOSE' | translate }}</button>
+</mat-dialog-actions>
