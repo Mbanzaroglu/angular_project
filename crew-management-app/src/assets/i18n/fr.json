@@ -12,10 +12,12 @@
     "TITLE": "Certificats",
     "NAME": "Nom",
     "DESCRIPTION": "Description",
-    "ISSUE_DATE": "Date de délivrance",
+    "ISSUE_DATE": "Date d'émission",
     "EXPIRY_DATE": "Date d'expiration",
     "CLOSE": "Fermer"
-  }
-  
-  
+  },
+  "BACK_TO_CREW_LIST": "Retour à la liste de l'équipage",
+  "CREW_DETAILS": "Détails de l'équipage",
+  "CREW_CERTIFICATES": "Certificats de l'équipage",
+  "NO_CERTIFICATES": "Aucun certificat trouvé pour cet équipier."
 }

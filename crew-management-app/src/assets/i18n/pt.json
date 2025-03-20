@@ -1,19 +1,23 @@
 {
   "HELLO": "Olá, crew-management-app",
   "FIRST_NAME": "Primeiro Nome",
-  "LAST_NAME": "Último Nome",
+  "LAST_NAME": "Sobrenome",
   "NATIONALITY": "Nacionalidade",
   "TITLE": "Título",
-  "DAYS_ON_BOARD": "Dias a Bordo",
-  "DAILY_RATE": "Taxa Diária",
+  "DAYS_ON_BOARD": "Dias a bordo",
+  "DAILY_RATE": "Taxa diária",
   "CURRENCY": "Moeda",
-  "TOTAL_INCOME": "Rendimento Total",
+  "TOTAL_INCOME": "Renda total",
   "CERTIFICATES": {
     "TITLE": "Certificados",
     "NAME": "Nome",
     "DESCRIPTION": "Descrição",
     "ISSUE_DATE": "Data de emissão",
-    "EXPIRY_DATE": "Data de validade",
+    "EXPIRY_DATE": "Data de expiração",
     "CLOSE": "Fechar"
-  }
+  },
+  "BACK_TO_CREW_LIST": "Voltar para a lista da tripulação",
+  "CREW_DETAILS": "Detalhes da tripulação",
+  "CREW_CERTIFICATES": "Certificados da tripulação",
+  "NO_CERTIFICATES": "Nenhum certificado encontrado para este membro da tripulação."
 }

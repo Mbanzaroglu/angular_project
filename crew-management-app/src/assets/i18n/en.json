@@ -15,6 +15,9 @@
     "ISSUE_DATE": "Issue Date",
     "EXPIRY_DATE": "Expiry Date",
     "CLOSE": "Close"
-  }
-  
+  },
+  "BACK_TO_CREW_LIST": "Back to the Crew List",
+  "CREW_DETAILS": "Crew Details",
+  "CREW_CERTIFICATES": "Crew Certificates",
+  "NO_CERTIFICATES": "No certificates found for this crew member."
 }
