@@ -3,4 +3,22 @@
   top: 10px; /* Üstten 10 piksel boşluk bırakır */
   right: 10px; /* Sağdan 10 piksel boşluk bırakır */
   z-index: 1000; /* Diğer öğelerin üstünde görünmesini sağlar */
+  margin-top: 1rem;
+
+}
+.app-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-star;
+  align-items: stretch ;
+  height: 100vh; /* Sayfanın tamamını kaplar */
+  text-align: center;
+  background-color: #f5f5f5; /* Hafif bir arka plan rengi */
+}
+
+.centered-title {
+  font-size: 3rem; /* Büyük bir yazı tipi */
+  font-weight: bold;
+  color: #1976d2; /* Material Design mavisi */
+  margin-bottom: 2rem; /* Dil seçici ile araya boşluk ekler */
 }
