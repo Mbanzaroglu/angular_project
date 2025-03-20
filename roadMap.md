@@ -77,15 +77,18 @@ Bu uygulama, bir mürettebat yönetim sistemi olarak tasarlanmıştır. Kullanı
    ```typescript
    // crew.routes.ts
    export const crewRoutes: Routes = [
-      { path: 'crew-list', component: CrewListComponent },
-      { path: 'crew-card/:id', component: CrewCardComponent }
+  { path: '', redirectTo: 'crew-list', pathMatch: 'full' }, // Doğru yönlendirme
+  { path: 'crew-list', component: CrewListComponent },
+  { path: 'crew-card/:id', component: CrewCardComponent }
    ];
    ```
    ```typescript
    // certificate.routes.ts
    export const certificateRoutes: Routes = [
-      { path: 'certificate-type-create', component: CertificateTypeCreateComponent }
-   ];
+   { path: 'certificate-modal', component: CertificateModalComponent },
+   { path: 'certificate-type-form', component: CertificateTypeModalComponent },
+   { path: 'add-certificate-modal', component: AddCertificateModalComponent }
+   ]; 
    ```
 
 ### 4. Shared Modül ve Servisler
@@ -184,13 +187,7 @@ Bu uygulama, bir mürettebat yönetim sistemi olarak tasarlanmıştır. Kullanı
 - **CertificateTypeModalComponent** oluşturuldu ve bir modal ile sertifika türü ekleme formu eklendi (Name, Description).
 - "Add Certificate Type" butonu CrewListComponent’e eklendi ve modal açıldı.
 
-### 11. Opsiyonel - Discount Sütunu
-
-- **CrewListComponent** tablosuna Discount sütunu eklendi.
-- Her satıra bir input alanı eklendi ve girilen indirim değeri Total Income’dan düşürüldü.
-- Toplam gelir özeti de güncellendi.
-
-### 12. Stil ve Arayüz İyileştirmeleri
+### 11. Stil ve Arayüz İyileştirmeleri
 
 - **CrewListComponent** ve **CrewCardComponent** için Angular Material temaları kullanıldı.
 - Butonlar ve modallar için stil düzenlemeleri yapıldı.
