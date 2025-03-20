@@ -56,7 +56,7 @@ export class CrewListComponent implements OnInit {
   openCertificateModal(crew: CrewMember) {
     console.log('Opening certificate modal for crew member:', crew);
     this.dialog.open(CertificateModalComponent, {
-      width: '1200px',
+      width: '1500px',
       data: { crewMemberId: crew.id } // Pass the ID in an object
     });
   }
@@ -77,15 +77,15 @@ export class CrewListComponent implements OnInit {
 
   // Satırın para birimini değiştirme fonksiyonu
   toggleRowCurrency(row: CrewMember) {
-    const previousCurrency = row.currency; // Mevcut para birimini sakla
-    row.currency = row.currency === 'USD' ? 'EUR' : 'USD'; // Para birimini değiştir
+    const previousCurrency = row.currency;
+    row.currency = row.currency === 'USD' ? 'EUR' : 'USD'; 
+
+    row.dailyRate = this.convertCurrency(row.dailyRate, previousCurrency as 'USD' | 'EUR', row.currency as 'USD' | 'EUR');
     row.totalIncome = this.convertCurrency(row.totalIncome, previousCurrency as 'USD' | 'EUR', row.currency as 'USD' | 'EUR');
-    
-    // Veri kaynağını güncelle
+
     const updatedData = this.dataSource$.getValue().map(item => item.id === row.id ? row : item);
     this.dataSource$.next(updatedData);
   }
-    
   deleteCrew(element: CrewMember) {
     this.crewService.deleteCrewMember(element.id);
     this.incomeSummary$ = this.crewService.getIncomeSummary();
