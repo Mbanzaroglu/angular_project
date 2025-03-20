@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { MatDialogModule, MatDialogRef } from '@angular/material/dialog';
+import { Component, OnInit } from '@angular/core';
+import { MatDialogRef } from '@angular/material/dialog';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CrewMember } from '@shared/models/crew-member.model';
 import { CommonModule } from '@angular/common';
@@ -8,6 +8,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
 import { TranslateModule } from '@ngx-translate/core';
+import { MatDialogModule } from '@angular/material/dialog';
+import { CrewService } from '@services/crew.service';
 
 @Component({
   selector: 'app-crew-modal',
@@ -25,12 +27,15 @@ import { TranslateModule } from '@ngx-translate/core';
   templateUrl: './crew-modal.component.html',
   styleUrls: ['./crew-modal.component.scss']
 })
-export class CrewModalComponent {
+export class CrewModalComponent implements OnInit {
   crewForm: FormGroup;
+  nationalities: string[] = [];
+  titles: string[] = [];
 
   constructor(
     private fb: FormBuilder,
-    private dialogRef: MatDialogRef<CrewModalComponent>
+    private dialogRef: MatDialogRef<CrewModalComponent>,
+    private crewService: CrewService
   ) {
     this.crewForm = this.fb.group({
       firstName: ['', Validators.required],
@@ -40,6 +45,18 @@ export class CrewModalComponent {
       daysOnBoard: [0, [Validators.required, Validators.min(0)]],
       dailyRate: [0, [Validators.required, Validators.min(0)]],
       currency: ['USD', Validators.required]
+    });
+  }
+
+  ngOnInit(): void {
+    // Nationality listesini al
+    this.crewService.getNationalities().subscribe(nationalities => {
+      this.nationalities = nationalities;
+    });
+
+    // Title listesini al
+    this.crewService.getTitles().subscribe(titles => {
+      this.titles = titles;
     });
   }
 

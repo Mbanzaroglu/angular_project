@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, BehaviorSubject } from 'rxjs';
+import { Observable, BehaviorSubject, of } from 'rxjs';
 import { CrewMember } from '@shared/models/crew-member.model';
 import { IncomeSummary } from '@models/income-summary.model';
 
@@ -13,6 +13,34 @@ export class CrewService {
     { id: 3, firstName: 'Carlos', lastName: 'Gomez', nationality: 'Spanish', title: 'Cooker', daysOnBoard: 150, dailyRate: 200, currency: 'USD', totalIncome: 30000, certificates: [] },
     { id: 4, firstName: 'Anna', lastName: 'Ivanova', nationality: 'Russian', title: 'Mechanic', daysOnBoard: 110, dailyRate: 220, currency: 'USD', totalIncome: 24200, certificates: [] },
     { id: 5, firstName: 'Liu', lastName: 'Wei', nationality: 'Chinese', title: 'Deckhand', daysOnBoard: 130, dailyRate: 180, currency: 'EUR', totalIncome: 23400, certificates: [] }
+  ];
+
+  // Nationality seçenekleri
+  private nationalityList: string[] = [
+    'American',
+    'British',
+    'Spanish',
+    'Russian',
+    'Chinese',
+    'French',
+    'German',
+    'Italian',
+    'Japanese',
+    'Brazilian'
+  ];
+
+  // Title seçenekleri
+  private titleList: string[] = [
+    'Captain',
+    'Engineer',
+    'Cooker',
+    'Mechanic',
+    'Deckhand',
+    'First Officer',
+    'Navigator',
+    'Steward',
+    'Electrician',
+    'Chief Mate'
   ];
 
   private crewListSubject = new BehaviorSubject<CrewMember[]>(this.crewList);
@@ -56,11 +84,20 @@ export class CrewService {
     this.crewListSubject.next(this.crewList);
   }
 
-  // Yeni metod: Mürettebat üyesi ekleme
   addCrewMember(newCrew: CrewMember): void {
     console.log('Adding new crew member:', newCrew);
     this.crewList.push(newCrew);
     this.crewListSubject.next(this.crewList);
     console.log('Crew member added. Updated crew list:', this.crewList);
+  }
+
+  // Yeni metod: Nationality listesini döndür
+  getNationalities(): Observable<string[]> {
+    return of(this.nationalityList);
+  }
+
+  // Yeni metod: Title listesini döndür
+  getTitles(): Observable<string[]> {
+    return of(this.titleList);
   }
 }

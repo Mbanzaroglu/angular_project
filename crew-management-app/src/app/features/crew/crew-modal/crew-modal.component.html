@@ -13,12 +13,20 @@
 
     <mat-form-field appearance="fill">
       <mat-label>{{ 'NATIONALITY' | translate }}</mat-label>
-      <input matInput formControlName="nationality" required>
+      <mat-select formControlName="nationality" required>
+        <mat-option *ngFor="let nationality of nationalities" [value]="nationality">
+          {{ nationality }}
+        </mat-option>
+      </mat-select>
     </mat-form-field>
 
     <mat-form-field appearance="fill">
       <mat-label>{{ 'TITLE' | translate }}</mat-label>
-      <input matInput formControlName="title" required>
+      <mat-select formControlName="title" required>
+        <mat-option *ngFor="let title of titles" [value]="title">
+          {{ title }}
+        </mat-option>
+      </mat-select>
     </mat-form-field>
 
     <mat-form-field appearance="fill">
