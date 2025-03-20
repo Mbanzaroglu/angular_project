@@ -96,7 +96,21 @@ export class CrewListComponent implements OnInit {
   }
 
   editCrew(element: CrewMember) {
-    // Edit fonksiyonu
+    const dialogRef = this.dialog.open(CrewModalComponent, {
+      width: '600px',
+      data: { crewMember: element } // Mevcut CrewMember verisini modal'a geçiyoruz
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        // Güncellenmiş verilerle crewList'i güncelle
+        const updatedCrewList = this.dataSource$.getValue().map(crew => 
+          crew.id === result.id ? result : crew
+        );
+        this.crewService.updateCrewList(updatedCrewList);
+        this.incomeSummary$ = this.crewService.getIncomeSummary();
+      }
+    });
   }
 
 
@@ -136,6 +150,7 @@ export class CrewListComponent implements OnInit {
       if (result) {
         console.log('Adding new certificate type:', result);
         this.certificateService.addCertificateType(result);
+        this.incomeSummary$ = this.crewService.getIncomeSummary();
       }
     });
   }

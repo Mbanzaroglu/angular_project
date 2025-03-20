@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { MatDialogRef } from '@angular/material/dialog';
+import { Component, OnInit, Inject } from '@angular/core';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CrewMember } from '@shared/models/crew-member.model';
 import { CommonModule } from '@angular/common';
@@ -31,11 +31,13 @@ export class CrewModalComponent implements OnInit {
   crewForm: FormGroup;
   nationalities: string[] = [];
   titles: string[] = [];
+  isEditMode: boolean = false; // Düzenleme modunda olup olmadığını belirlemek için
 
   constructor(
     private fb: FormBuilder,
     private dialogRef: MatDialogRef<CrewModalComponent>,
-    private crewService: CrewService
+    private crewService: CrewService,
+    @Inject(MAT_DIALOG_DATA) public data: { crewMember?: CrewMember } // Mevcut CrewMember verisini alıyoruz
   ) {
     this.crewForm = this.fb.group({
       firstName: ['', Validators.required],
@@ -46,6 +48,20 @@ export class CrewModalComponent implements OnInit {
       dailyRate: [0, [Validators.required, Validators.min(0)]],
       currency: ['USD', Validators.required]
     });
+
+    // Eğer data.crewMember varsa, düzenleme modundayız
+    if (this.data?.crewMember) {
+      this.isEditMode = true;
+      this.crewForm.patchValue({
+        firstName: this.data.crewMember.firstName,
+        lastName: this.data.crewMember.lastName,
+        nationality: this.data.crewMember.nationality,
+        title: this.data.crewMember.title,
+        daysOnBoard: this.data.crewMember.daysOnBoard,
+        dailyRate: this.data.crewMember.dailyRate,
+        currency: this.data.crewMember.currency
+      });
+    }
   }
 
   ngOnInit(): void {
@@ -62,13 +78,14 @@ export class CrewModalComponent implements OnInit {
 
   onSubmit() {
     if (this.crewForm.valid) {
-      const newCrew: CrewMember = {
-        ...this.crewForm.value,
-        id: Date.now(), // Benzersiz bir ID oluştur
-        totalIncome: this.crewForm.value.daysOnBoard * this.crewForm.value.dailyRate,
-        certificates: []
+      const formValue = this.crewForm.value;
+      const updatedCrew: CrewMember = {
+        ...formValue,
+        id: this.isEditMode ? this.data.crewMember!.id : Date.now(), // Düzenleme modunda mevcut ID'yi koru, yoksa yeni ID oluştur
+        totalIncome: formValue.daysOnBoard * formValue.dailyRate,
+        certificates: this.isEditMode ? this.data.crewMember!.certificates : [] // Düzenleme modunda mevcut sertifikaları koru
       };
-      this.dialogRef.close(newCrew);
+      this.dialogRef.close(updatedCrew);
     }
   }
 
