@@ -18,7 +18,7 @@
   align-items: center;
   gap: 0.5rem;
   font-size: 1rem;
-  color: #1976d2; /* Mavi renk, Back butonuyla aynı */
+  color: #1976d2;
   background: none;
   border: none;
   cursor: pointer;
@@ -29,8 +29,8 @@
 
 .back-button:hover,
 .add-certificate-button:hover {
-  background-color: rgba(25, 118, 210, 0.1); /* Hafif mavi arka plan hover efekti */
-  color: #1565c0; /* Biraz daha koyu mavi */
+  background-color: rgba(25, 118, 210, 0.1);
+  color: #1565c0;
 }
 
 .back-button mat-icon,
@@ -63,6 +63,13 @@
   max-width: 900px;
   box-sizing: border-box;
   margin: 1rem auto;
+  position: relative; /* Delete butonunu hizalamak için */
+}
+
+.certificate-card mat-card-actions {
+  position: absolute;
+  top: 10px;
+  right: 10px;
 }
 
 .crew-card-header {

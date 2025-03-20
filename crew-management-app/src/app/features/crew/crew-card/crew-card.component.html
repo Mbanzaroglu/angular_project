@@ -41,6 +41,11 @@
               <p><strong>{{ 'CERTIFICATES.ISSUE_DATE' | translate }}:</strong> {{ certificate.issueDate }}</p>
               <p><strong>{{ 'CERTIFICATES.EXPIRY_DATE' | translate }}:</strong> {{ certificate.expiryDate }}</p>
             </mat-card-content>
+            <mat-card-actions>
+              <button mat-icon-button color="warn" (click)="deleteCertificate(certificate.id)" aria-label="Delete certificate">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </mat-card-actions>
           </mat-card>
         </ng-container>
         <ng-template #noCerts>

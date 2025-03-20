@@ -12,6 +12,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatDialog } from '@angular/material/dialog';
 import { AddCertificateModalComponent } from '../../certificate/add-certificate-modal/add-certificate-modal.component';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-crew-card',
@@ -24,6 +25,8 @@ import { AddCertificateModalComponent } from '../../certificate/add-certificate-
     MatCardModule,
     MatListModule,
     MatIconModule,
+    MatCardModule,
+    MatButtonModule,
     TranslateModule
   ]
 })
@@ -82,6 +85,12 @@ export class CrewCardComponent implements OnInit {
       }
     });
   }
+
+  deleteCertificate(certificateId: number): void {
+    this.certificateService.deleteCertificate(certificateId);
+    this.loadCertificates(); // Sertifika listesini güncelle
+  }
+  
   // Sekme değiştiğinde çağrılacak metod
   onTabChange(index: number): void {
     this.selectedTabIndex = index;
