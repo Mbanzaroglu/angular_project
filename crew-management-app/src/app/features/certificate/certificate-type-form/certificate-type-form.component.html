@@ -1,1 +1,20 @@
-<p>certificate-type-form works!</p>
+<h2 mat-dialog-title>{{ 'ADD_NEW_CERTIFICATE_TYPE' | translate }}</h2>
+<mat-dialog-content>
+  <form [formGroup]="certificateTypeForm">
+    <mat-form-field appearance="fill">
+      <mat-label>{{ 'CERTIFICATES.NAME' | translate }}</mat-label>
+      <input matInput formControlName="name" required>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>{{ 'CERTIFICATES.DESCRIPTION' | translate }}</mat-label>
+      <input matInput formControlName="description" required>
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onCancel()">{{ 'CANCEL' | translate }}</button>
+  <button mat-raised-button color="primary" (click)="onSubmit()" [disabled]="!certificateTypeForm.valid">
+    {{ 'SAVE' | translate }}
+  </button>
+</mat-dialog-actions>
