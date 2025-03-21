@@ -9,7 +9,7 @@
     </button>
   </div>
 
-  <table mat-table [dataSource]="dataSource$ | async" class="mat-elevation-z8">
+  <table mat-table [dataSource]="(dataSource$ | async) ?? []" class="mat-elevation-z8">
     <!-- First Name Column -->
     <ng-container matColumnDef="firstName">
       <th mat-header-cell *matHeaderCellDef> {{ 'FIRST_NAME' | translate }} </th>

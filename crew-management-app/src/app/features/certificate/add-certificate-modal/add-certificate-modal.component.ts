@@ -1,6 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
 import { CertificateService } from '@services/certificate.service';
 import { CertificateType } from '@shared/models/certificate-type.model';
 import { Certificate } from '@models/certificate.model';
@@ -43,6 +43,8 @@ export class AddCertificateModalComponent implements OnInit {
       certificateType: [null, Validators.required],
       issueDate: ['', Validators.required],
       expiryDate: ['', Validators.required]
+    }, {
+      validators: [this.dateValidator, this.expiryDateAfterTodayValidator]
     });
   }
 
@@ -51,13 +53,52 @@ export class AddCertificateModalComponent implements OnInit {
     this.certificateService.getCertificateTypes().subscribe(types => {
       this.certificateTypes = types;
     });
+
+    // Form değişikliklerini dinleyerek doğrulama hatalarını güncelle
+    this.certificateForm.valueChanges.subscribe(() => {
+      this.certificateForm.updateValueAndValidity();
+    });
+  }
+
+  // Özel doğrulayıcı: expiryDate, issueDate’ten büyük olmalı
+  dateValidator(control: AbstractControl): ValidationErrors | null {
+    const issueDate = control.get('issueDate')?.value;
+    const expiryDate = control.get('expiryDate')?.value;
+
+    if (issueDate && expiryDate) {
+      const issue = new Date(issueDate);
+      const expiry = new Date(expiryDate);
+
+      if (expiry <= issue) {
+        control.get('expiryDate')?.setErrors({ expiryBeforeIssue: true });
+        return { expiryBeforeIssue: true };
+      }
+    }
+    return null;
+  }
+
+  // Özel doğrulayıcı: expiryDate, bugünden büyük olmalı
+  expiryDateAfterTodayValidator(control: AbstractControl): ValidationErrors | null {
+    const expiryDate = control.get('expiryDate')?.value;
+
+    if (expiryDate) {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0); // Saat farkını ortadan kaldırmak için
+      const expiry = new Date(expiryDate);
+
+      if (expiry <= today) {
+        control.get('expiryDate')?.setErrors({ expiryBeforeToday: true });
+        return { expiryBeforeToday: true };
+      }
+    }
+    return null;
   }
 
   onSubmit() {
     if (this.certificateForm.valid) {
       const formValue = this.certificateForm.value;
       const newCertificate: Certificate = {
-        id: Date.now(), // ID burada oluşturuluyor, ancak CertificateService içinde de kontrol edilecek
+        id: Date.now(),
         name: formValue.certificateType.name,
         description: formValue.certificateType.description,
         issueDate: formValue.issueDate,
