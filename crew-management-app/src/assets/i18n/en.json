@@ -14,7 +14,14 @@
     "DESCRIPTION": "Description",
     "ISSUE_DATE": "Issue Date",
     "EXPIRY_DATE": "Expiry Date",
-    "CLOSE": "Close"
+    "CLOSE": "Close",
+    "NAME_REQUIRED": "Name is required",
+    "DESCRIPTION_REQUIRED": "Description is required",
+    "ISSUE_DATE_REQUIRED": "Issue Date is required",
+    "EXPIRY_DATE_REQUIRED": "Expiry Date is required",
+    "EXPIRY_BEFORE_ISSUE": "Expiry Date must be after Issue Date",
+    "EXPIRY_BEFORE_TODAY": "Expiry Date must be after today"
+    
   },
   "ACTION": "Action",
   "BACK_TO_CREW_LIST": "Back to the Crew List",

@@ -14,7 +14,12 @@
     "DESCRIPTION": "Description",
     "ISSUE_DATE": "Date d'émission",
     "EXPIRY_DATE": "Date d'expiration",
-    "CLOSE": "Fermer"
+    "CLOSE": "Fermer",
+    "DESCRIPTION_REQUIRED": "La description est obligatoire",
+    "ISSUE_DATE_REQUIRED": "La date d'émission est obligatoire",
+    "EXPIRY_DATE_REQUIRED": "La date d'expiration est obligatoire",
+    "EXPIRY_BEFORE_ISSUE": "La date d'expiration doit être après la date d'émission",
+    "EXPIRY_BEFORE_TODAY": "La date d'expiration doit être après aujourd'hui"
   },
   "ACTION": "Action",
   "BACK_TO_CREW_LIST": "Retour à la liste de l'équipage",
