@@ -56,10 +56,13 @@
     <ng-container matColumnDef="currency">
       <th mat-header-cell *matHeaderCellDef> {{ 'CURRENCY' | translate }} </th>
       <td mat-cell *matCellDef="let element">
-        {{ element.currency }}
-        <button mat-icon-button (click)="toggleRowCurrency(element)">
-          <mat-icon>{{ element.currency === 'USD' ? 'euro' : 'attach_money' }}</mat-icon>
-        </button>
+        <mat-form-field appearance="outline" style="width: 100px;">
+          <mat-select [(value)]="element.currency" (selectionChange)="changeCurrency(element, $event.value)">
+            <mat-option *ngFor="let currency of currencies" [value]="currency">
+              {{ currency }}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
       </td>
       <td mat-footer-cell *matFooterCellDef>
         <strong>Total:</strong>

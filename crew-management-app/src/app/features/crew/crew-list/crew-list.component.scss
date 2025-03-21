@@ -1,26 +1,44 @@
 .crew-list {
-    margin-top: 20px;
-    margin-right: 40px;
-    margin-bottom: 30px;
-    margin-left: 50px;
-    padding: 1rem;
-  }
+  margin: 2rem auto;
+  max-width: 1200px;
+}
 
-  
-  .action-buttons {
-    display: flex;
-    justify-content: flex-end;
-    margin-bottom: 1rem;
-  }
-  
+.action-buttons {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 1rem;
+}
 
-  .mat-elevation-z8 {
-    box-shadow: 0 5px 5px -3px rgba(0, 0, 0, 0.2), 0 8px 10px 1px rgba(0, 0, 0, 0.14), 0 3px 14px 2px rgba(0, 0, 0, 0.12);
-  }
-  
-  // .crew-list .mat-cell,
-  // .crew-list .mat-header-cell,
-  // .crew-list .mat-footer-cell {
-  //   text-align: center; /* Yatay olarak ortala */
-  //   vertical-align: middle; /* Dikey olarak ortala */
-  // }
+/* src/styles.scss */
+.crew-list td.mat-cell {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.crew-list td.mat-cell mat-form-field {
+  width: 70px !important;
+  margin: 0 !important;
+}
+
+.crew-list td.mat-cell mat-form-field .mat-form-field-wrapper {
+  padding-bottom: 0 !important;
+}
+
+.crew-list td.mat-cell mat-form-field .mat-form-field-infix {
+  padding: 0.2rem 0 !important;
+  font-size: 12px !important;
+}
+
+.crew-list td.mat-cell mat-form-field mat-select {
+  font-size: 12px !important;
+}
+
+.crew-list mat-option {
+  font-size: 12px !important;
+  line-height: 2em !important;
+}
+
+.crew-list td.mat-cell mat-form-field .mat-select-arrow {
+  transform: scale(0.8) !important;
+}

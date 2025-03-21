@@ -76,13 +76,37 @@ export class CertificateService {
           ...crewMember.certificates,
           newCertificate.id
         ];
-        // CrewService'in crewListSubject'ini güncelle
         this.crewService.updateCrewList(crewList);
       }
     });
 
-    // Sertifikaların atandığını bildir
     this.certificatesAssignedSubject.next(true);
+  }
+
+  // Yeni metod: Sertifika silme
+  deleteCertificate(certificateId: number): void {
+    console.log(`Deleting certificate with ID: ${certificateId}`);
+    // Silinecek sertifikayı bul
+    const certificateToDelete = this.certificates.find(cert => cert.id === certificateId);
+    if (certificateToDelete) {
+      // certificates array'inden sertifikayı kaldır
+      this.certificates = this.certificates.filter(cert => cert.id !== certificateId);
+      console.log('Certificate deleted. Updated certificates list:', this.certificates);
+
+      // İlgili CrewMember'ın certificates array'inden sertifika ID'sini kaldır
+      this.crewService.getCrewList().subscribe(crewList => {
+        const crewMember = crewList.find(member => member.id === certificateToDelete.crewMemberId);
+        if (crewMember) {
+          crewMember.certificates = crewMember.certificates.filter(id => id !== certificateId);
+          this.crewService.updateCrewList(crewList);
+        }
+      });
+
+      // Sertifikaların güncellendiğini bildir
+      this.certificatesAssignedSubject.next(true);
+    } else {
+      console.warn(`Certificate with ID ${certificateId} not found.`);
+    }
   }
 
   addCertificateType(newCertificateType: CertificateType): void {

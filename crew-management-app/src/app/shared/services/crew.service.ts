@@ -43,6 +43,8 @@ export class CrewService {
     'Chief Mate'
   ];
 
+  private currencyList: string[] = ['USD', 'EUR'];
+
   private crewListSubject = new BehaviorSubject<CrewMember[]>(this.crewList);
   crewList$ = this.crewListSubject.asObservable();
 
@@ -52,6 +54,10 @@ export class CrewService {
 
   getCrewList(): Observable<CrewMember[]> {
     return this.crewList$;
+  }
+
+  getCurrencies(): Observable<string[]> {
+    return of(this.currencyList);
   }
 
   getIncomeSummary(): Observable<IncomeSummary[]> {
