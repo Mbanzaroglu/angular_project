@@ -42,3 +42,18 @@
 .crew-list td.mat-cell mat-form-field .mat-select-arrow {
   transform: scale(0.8) !important;
 }
+
+// crew-list.component.scss
+
+// Mat-select panelinin genişliğini artır
+.custom-select-panel {
+  min-width: 150px !important; // Mat-form-field genişliğiyle uyumlu
+  max-width: 200px !important; // Maksimum genişlik sınırı (isteğe bağlı)
+}
+
+// Mat-option’ların içeriğini daha iyi göstermek için padding ekleyebiliriz
+.mat-option {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

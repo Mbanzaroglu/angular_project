@@ -2,20 +2,20 @@ import { Injectable } from '@angular/core';
 import { Observable, BehaviorSubject, of } from 'rxjs';
 import { CrewMember } from '@shared/models/crew-member.model';
 import { IncomeSummary } from '@models/income-summary.model';
+import { Currency } from '@shared/enums/currency.enum';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CrewService {
   private crewList: CrewMember[] = [
-    { id: 1, firstName: 'John', lastName: 'Doe', nationality: 'American', title: 'Captain', daysOnBoard: 120, dailyRate: 300, currency: 'USD', totalIncome: 36000, certificates: [] },
-    { id: 2, firstName: 'Jane', lastName: 'Smith', nationality: 'British', title: 'Engineer', daysOnBoard: 90, dailyRate: 250, currency: 'EUR', totalIncome: 22500, certificates: [] },
-    { id: 3, firstName: 'Carlos', lastName: 'Gomez', nationality: 'Spanish', title: 'Cooker', daysOnBoard: 150, dailyRate: 200, currency: 'USD', totalIncome: 30000, certificates: [] },
-    { id: 4, firstName: 'Anna', lastName: 'Ivanova', nationality: 'Russian', title: 'Mechanic', daysOnBoard: 110, dailyRate: 220, currency: 'USD', totalIncome: 24200, certificates: [] },
-    { id: 5, firstName: 'Liu', lastName: 'Wei', nationality: 'Chinese', title: 'Deckhand', daysOnBoard: 130, dailyRate: 180, currency: 'EUR', totalIncome: 23400, certificates: [] }
+    { id: 1, firstName: 'John', lastName: 'Doe', nationality: 'American', title: 'Captain', daysOnBoard: 120, dailyRate: 300, currency: Currency.USD, totalIncome: 36000, certificates: [] },
+    { id: 2, firstName: 'Jane', lastName: 'Smith', nationality: 'British', title: 'Engineer', daysOnBoard: 90, dailyRate: 250, currency: Currency.EUR, totalIncome: 22500, certificates: [] },
+    { id: 3, firstName: 'Carlos', lastName: 'Gomez', nationality: 'Spanish', title: 'Cooker', daysOnBoard: 150, dailyRate: 200, currency: Currency.USD, totalIncome: 30000, certificates: [] },
+    { id: 4, firstName: 'Anna', lastName: 'Ivanova', nationality: 'Russian', title: 'Mechanic', daysOnBoard: 110, dailyRate: 220, currency: Currency.USD, totalIncome: 24200, certificates: [] },
+    { id: 5, firstName: 'Liu', lastName: 'Wei', nationality: 'Chinese', title: 'Deckhand', daysOnBoard: 130, dailyRate: 180, currency: Currency.EUR, totalIncome: 23400, certificates: [] }
   ];
 
-  // Nationality seçenekleri
   private nationalityList: string[] = [
     'American',
     'British',
@@ -29,7 +29,6 @@ export class CrewService {
     'Brazilian'
   ];
 
-  // Title seçenekleri
   private titleList: string[] = [
     'Captain',
     'Engineer',
@@ -43,43 +42,57 @@ export class CrewService {
     'Chief Mate'
   ];
 
-  private currencyList: string[] = ['USD', 'EUR'];
+  private currencyList: Currency[] = [Currency.USD, Currency.EUR];
 
   private crewListSubject = new BehaviorSubject<CrewMember[]>(this.crewList);
   crewList$ = this.crewListSubject.asObservable();
 
   private exchangeRate: number = 0.85;
 
-  constructor() {}
+  // Orijinal dailyRate ve totalIncome değerlerini saklamak için Map’ler
+  private originalDailyRates: Map<number, { value: number; currency: Currency }> = new Map();
+  private originalTotalIncomes: Map<number, { value: number; currency: Currency }> = new Map();
+
+  constructor() {
+    // Başlangıçta orijinal değerleri sakla
+    this.crewList.forEach(crew => {
+      this.originalDailyRates.set(crew.id, { value: crew.dailyRate, currency: crew.currency });
+      this.originalTotalIncomes.set(crew.id, { value: crew.totalIncome, currency: crew.currency });
+    });
+  }
 
   getCrewList(): Observable<CrewMember[]> {
     return this.crewList$;
   }
 
-  getCurrencies(): Observable<string[]> {
+  getCurrencies(): Observable<Currency[]> {
     return of(this.currencyList);
   }
 
   getIncomeSummary(): Observable<IncomeSummary[]> {
     const totalUSD = this.crewList.reduce((acc, member) => {
-      if (member.currency === 'USD') {
-        return acc + member.totalIncome;
+      const original = this.originalTotalIncomes.get(member.id);
+      if (!original) return acc;
+      if (original.currency === Currency.USD) {
+        return acc + original.value;
       } else {
-        return acc + member.totalIncome / this.exchangeRate;
+        return acc + original.value / this.exchangeRate; // EUR -> USD
       }
     }, 0);
 
     const totalEUR = this.crewList.reduce((acc, member) => {
-      if (member.currency === 'EUR') {
-        return acc + member.totalIncome;
+      const original = this.originalTotalIncomes.get(member.id);
+      if (!original) return acc;
+      if (original.currency === Currency.EUR) {
+        return acc + original.value;
       } else {
-        return acc + member.totalIncome * this.exchangeRate;
+        return acc + original.value * this.exchangeRate; // USD -> EUR
       }
     }, 0);
 
     const summary: IncomeSummary[] = [
-      { currency: 'USD', totalIncome: totalUSD },
-      { currency: 'EUR', totalIncome: totalEUR }
+      { currency: Currency.USD, totalIncome: totalUSD },
+      { currency: Currency.EUR, totalIncome: totalEUR }
     ];
 
     return new BehaviorSubject(summary).asObservable();
@@ -87,30 +100,39 @@ export class CrewService {
 
   deleteCrewMember(id: number): void {
     this.crewList = this.crewList.filter(member => member.id !== id);
+    this.originalDailyRates.delete(id);
+    this.originalTotalIncomes.delete(id);
     this.crewListSubject.next(this.crewList);
   }
 
   addCrewMember(newCrew: CrewMember): void {
     console.log('Adding new crew member:', newCrew);
     this.crewList.push(newCrew);
+    this.originalDailyRates.set(newCrew.id, { value: newCrew.dailyRate, currency: newCrew.currency });
+    this.originalTotalIncomes.set(newCrew.id, { value: newCrew.totalIncome, currency: newCrew.currency });
     this.crewListSubject.next(this.crewList);
     console.log('Crew member added. Updated crew list:', this.crewList);
   }
 
-  // Yeni metod: Crew listesini güncelle
   updateCrewList(updatedCrewList: CrewMember[]): void {
     this.crewList = updatedCrewList;
     this.crewListSubject.next(this.crewList);
     console.log('Crew list updated:', this.crewList);
   }
 
-  // Yeni metod: Nationality listesini döndür
   getNationalities(): Observable<string[]> {
     return of(this.nationalityList);
   }
 
-  // Yeni metod: Title listesini döndür
   getTitles(): Observable<string[]> {
     return of(this.titleList);
+  }
+
+  getOriginalDailyRate(id: number): { value: number; currency: Currency } | undefined {
+    return this.originalDailyRates.get(id);
+  }
+
+  getOriginalTotalIncome(id: number): { value: number; currency: Currency } | undefined {
+    return this.originalTotalIncomes.get(id);
   }
 }

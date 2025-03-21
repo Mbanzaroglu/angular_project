@@ -10,6 +10,7 @@ import { MatInputModule } from '@angular/material/input';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatDialogModule } from '@angular/material/dialog';
 import { CrewService } from '@services/crew.service';
+import { Currency, getCurrencyDetailById, getCurrencyCodeById } from '@shared/enums/currency.enum';
 
 @Component({
   selector: 'app-crew-modal',
@@ -31,13 +32,14 @@ export class CrewModalComponent implements OnInit {
   crewForm: FormGroup;
   nationalities: string[] = [];
   titles: string[] = [];
-  isEditMode: boolean = false; // Düzenleme modunda olup olmadığını belirlemek için
+  currencies: Currency[] = [];
+  isEditMode: boolean = false;
 
   constructor(
     private fb: FormBuilder,
     private dialogRef: MatDialogRef<CrewModalComponent>,
     private crewService: CrewService,
-    @Inject(MAT_DIALOG_DATA) public data: { crewMember?: CrewMember } // Mevcut CrewMember verisini alıyoruz
+    @Inject(MAT_DIALOG_DATA) public data: { crewMember?: CrewMember }
   ) {
     this.crewForm = this.fb.group({
       firstName: ['', Validators.required],
@@ -46,10 +48,9 @@ export class CrewModalComponent implements OnInit {
       title: ['', Validators.required],
       daysOnBoard: [0, [Validators.required, Validators.min(0)]],
       dailyRate: [0, [Validators.required, Validators.min(0)]],
-      currency: ['USD', Validators.required]
+      currency: [Currency.USD, Validators.required] // Varsayılan olarak Currency.USD
     });
 
-    // Eğer data.crewMember varsa, düzenleme modundayız
     if (this.data?.crewMember) {
       this.isEditMode = true;
       this.crewForm.patchValue({
@@ -59,20 +60,22 @@ export class CrewModalComponent implements OnInit {
         title: this.data.crewMember.title,
         daysOnBoard: this.data.crewMember.daysOnBoard,
         dailyRate: this.data.crewMember.dailyRate,
-        currency: this.data.crewMember.currency
+        currency: this.data.crewMember.currency // Currency enum’ı olarak geliyor
       });
     }
   }
 
   ngOnInit(): void {
-    // Nationality listesini al
     this.crewService.getNationalities().subscribe(nationalities => {
       this.nationalities = nationalities;
     });
 
-    // Title listesini al
     this.crewService.getTitles().subscribe(titles => {
       this.titles = titles;
+    });
+
+    this.crewService.getCurrencies().subscribe(currencies => {
+      this.currencies = currencies;
     });
   }
 
@@ -81,9 +84,10 @@ export class CrewModalComponent implements OnInit {
       const formValue = this.crewForm.value;
       const updatedCrew: CrewMember = {
         ...formValue,
-        id: this.isEditMode ? this.data.crewMember!.id : Date.now(), // Düzenleme modunda mevcut ID'yi koru, yoksa yeni ID oluştur
+        id: this.isEditMode ? this.data.crewMember!.id : Date.now(),
         totalIncome: formValue.daysOnBoard * formValue.dailyRate,
-        certificates: this.isEditMode ? this.data.crewMember!.certificates : [] // Düzenleme modunda mevcut sertifikaları koru
+        certificates: this.isEditMode ? this.data.crewMember!.certificates : [],
+        currency: formValue.currency // Currency enum’ı olarak zaten doğru tipte
       };
       this.dialogRef.close(updatedCrew);
     }
@@ -91,5 +95,9 @@ export class CrewModalComponent implements OnInit {
 
   onCancel() {
     this.dialogRef.close();
+  }
+
+  getCurrencyDetail(currency: Currency) {
+    return getCurrencyDetailById(currency);
   }
 }

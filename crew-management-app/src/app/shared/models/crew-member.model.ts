@@ -1,3 +1,4 @@
+import { Currency } from "@shared/enums/currency.enum";
 import { Certificate } from "./certificate.model";
 
 export interface CrewMember {
@@ -8,7 +9,7 @@ export interface CrewMember {
     title: string;
     daysOnBoard: number;
     dailyRate: number;
-    currency: string;
+    currency: Currency;
     totalIncome: number;
     discount?: number; // Opsiyonel
     certificates: number[];

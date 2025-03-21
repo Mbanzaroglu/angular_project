@@ -17,6 +17,7 @@ import { Router, RouterModule } from '@angular/router';
 import { CrewModalComponent } from '../crew-modal/crew-modal.component';
 import { CertificateService } from '@shared/services/certificate.service';
 import { CertificateTypeModalComponent } from 'app/features/certificate/certificate-type-form/certificate-type-form.component';
+import { Currency, getCurrencyDetailById, getCurrencyCodeById } from '@shared/enums/currency.enum';
 
 @Component({
   selector: 'app-crew-list',
@@ -41,14 +42,9 @@ export class CrewListComponent implements OnInit {
   dataSource$: BehaviorSubject<CrewMember[]> = new BehaviorSubject<CrewMember[]>([]);
   incomeSummary$: Observable<IncomeSummary[]> = new BehaviorSubject<IncomeSummary[]>([]);
 
-  // CrewService’ten gelen para birimleri
-  currencies: string[] = [];
+  currencies: Currency[] = [];
 
-  // Kur farkı (örneğin, 1 USD = 0.85 EUR)
   exchangeRate = 0.85;
-
-  // Orijinal dailyRate değerlerini saklamak için bir Map
-  private originalDailyRates: Map<number, number> = new Map();
 
   constructor(
     private crewService: CrewService,
@@ -59,12 +55,8 @@ export class CrewListComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // Crew listesini yükle ve orijinal dailyRate değerlerini sakla
     this.crewService.getCrewList().subscribe(data => {
       data.forEach(crew => {
-        // Orijinal dailyRate değerini sakla
-        this.originalDailyRates.set(crew.id, crew.dailyRate);
-        // totalIncome’u güncelle (başlangıçta orijinal değer)
         crew.totalIncome = crew.daysOnBoard * crew.dailyRate;
       });
       this.dataSource$.next(data);
@@ -72,7 +64,6 @@ export class CrewListComponent implements OnInit {
 
     this.incomeSummary$ = this.crewService.getIncomeSummary();
 
-    // Para birimlerini CrewService’ten al
     this.crewService.getCurrencies().subscribe(currencies => {
       this.currencies = currencies;
     });
@@ -86,46 +77,49 @@ export class CrewListComponent implements OnInit {
     });
   }
 
-  // Para birimini dönüştürme fonksiyonu
-  convertCurrency(amount: number, fromCurrency: string, toCurrency: string): number {
+  convertCurrency(amount: number, fromCurrency: Currency, toCurrency: Currency): number {
     if (fromCurrency === toCurrency) {
       return amount;
     }
-    if (fromCurrency === 'USD' && toCurrency === 'EUR') {
+    const fromCode = getCurrencyCodeById(fromCurrency);
+    const toCode = getCurrencyCodeById(toCurrency);
+    if (fromCode === 'USD' && toCode === 'EUR') {
       return amount * this.exchangeRate;
     }
-    if (fromCurrency === 'EUR' && toCurrency === 'USD') {
+    if (fromCode === 'EUR' && toCode === 'USD') {
       return amount / this.exchangeRate;
     }
-    return amount; // Bilinmeyen para birimi durumunda dönüşüm yapma
+    return amount;
   }
 
-  // Para birimini değiştirme fonksiyonu
-  changeCurrency(row: CrewMember, newCurrency: string) {
-    const previousCurrency = row.currency;
+  changeCurrency(row: CrewMember, newCurrency: Currency) {
+    // Orijinal dailyRate ve totalIncome değerlerini CrewService’ten al
+    const originalDailyRateData = this.crewService.getOriginalDailyRate(row.id);
+    const originalTotalIncomeData = this.crewService.getOriginalTotalIncome(row.id);
+
+    const originalDailyRate = originalDailyRateData ? originalDailyRateData.value : row.dailyRate;
+    const originalTotalIncome = originalTotalIncomeData ? originalTotalIncomeData.value : row.totalIncome;
+
+    const originalDailyRateCurrency = originalDailyRateData ? originalDailyRateData.currency : row.currency;
+    const originalTotalIncomeCurrency = originalTotalIncomeData ? originalTotalIncomeData.currency : row.currency;
+
+    // Currency’yi güncelle
     row.currency = newCurrency;
 
-    // Orijinal dailyRate değerini al
-    const originalDailyRate = this.originalDailyRates.get(row.id) || row.dailyRate;
-
-    // dailyRate’i orijinal değerden yeni para birimine dönüştür
-    row.dailyRate = this.convertCurrency(originalDailyRate, 'USD', row.currency);
-
-    // totalIncome’u orijinal değerden hesapla ve yeni para birimine dönüştür
-    const originalTotalIncome = row.daysOnBoard * originalDailyRate;
-    row.totalIncome = this.convertCurrency(originalTotalIncome, 'USD', row.currency);
+    // dailyRate ve totalIncome’u orijinal para biriminden yeni para birimine dönüştür
+    row.dailyRate = this.convertCurrency(originalDailyRate, originalDailyRateCurrency, row.currency);
+    row.totalIncome = this.convertCurrency(originalTotalIncome, originalTotalIncomeCurrency, row.currency);
 
     // dataSource$’ı güncelle
-    const updatedData = this.dataSource$.getValue().map(item => (item.id === row.id ? row : item));
+    const updatedData = this.dataSource$.getValue().map(item => (item.id === row.id ? { ...item, ...row } : item));
     this.dataSource$.next(updatedData);
 
-    // Income summary’yi güncelle
-    this.incomeSummary$ = this.crewService.getIncomeSummary();
+    // CrewService’teki crewList’i güncelle
+    this.crewService.updateCrewList(updatedData);
   }
 
   deleteCrew(element: CrewMember) {
     this.crewService.deleteCrewMember(element.id);
-    this.originalDailyRates.delete(element.id); // Silinen üyenin orijinal dailyRate’ini kaldır
     this.incomeSummary$ = this.crewService.getIncomeSummary();
   }
 
@@ -140,9 +134,6 @@ export class CrewListComponent implements OnInit {
         const updatedCrewList = this.dataSource$.getValue().map(crew =>
           crew.id === result.id ? result : crew
         );
-        // Güncellenen üyenin orijinal dailyRate’ini güncelle
-        this.originalDailyRates.set(result.id, result.dailyRate);
-        result.totalIncome = result.daysOnBoard * result.dailyRate;
         this.crewService.updateCrewList(updatedCrewList);
         this.incomeSummary$ = this.crewService.getIncomeSummary();
       }
@@ -167,9 +158,6 @@ export class CrewListComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         this.crewService.addCrewMember(result);
-        // Yeni üyenin orijinal dailyRate’ini sakla
-        this.originalDailyRates.set(result.id, result.dailyRate);
-        result.totalIncome = result.daysOnBoard * result.dailyRate;
         this.incomeSummary$ = this.crewService.getIncomeSummary();
       }
     });
@@ -189,5 +177,9 @@ export class CrewListComponent implements OnInit {
         this.incomeSummary$ = this.crewService.getIncomeSummary();
       }
     });
+  }
+
+  getCurrencyDetail(currency: Currency) {
+    return getCurrencyDetailById(currency);
   }
 }
