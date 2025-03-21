@@ -1,0 +1,112 @@
+.crew-card-container {
+  margin: 2rem auto;
+  max-width: 900px;
+  position: relative;
+}
+
+.header-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding: 0 0.5rem;
+}
+
+.back-button,
+.add-certificate-button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1rem;
+  color: #1976d2;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem 1rem;
+  transition: background-color 0.3s, color 0.3s;
+  border-radius: 4px;
+}
+
+.back-button:hover,
+.add-certificate-button:hover {
+  background-color: rgba(25, 118, 210, 0.1);
+  color: #1565c0;
+}
+
+.back-button mat-icon,
+.add-certificate-button mat-icon {
+  font-size: 1.2rem;
+  height: 1.2rem;
+  width: 1.2rem;
+}
+
+.crew-card {
+  text-align: center;
+  padding: 2rem;
+  width: 100%;
+  max-width: 900px;
+  box-sizing: border-box;
+  margin: 0 auto;
+}
+
+.certificates-container {
+  text-align: center;
+  margin-top: 1.5rem;
+  width: 100%;
+  max-width: 900px;
+  box-sizing: border-box;
+  margin: 0 auto;
+}
+
+.certificate-card {
+  width: 100%;
+  max-width: 900px;
+  box-sizing: border-box;
+  margin: 1rem auto;
+  position: relative; /* Delete butonunu hizalamak için */
+}
+
+.certificate-card mat-card-actions {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+
+.crew-card-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.crew-title h1 {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.crew-title h3 {
+  font-size: 1.2rem;
+  font-weight: normal;
+  color: gray;
+}
+
+.crew-details {
+  margin-top: 1rem;
+}
+
+.info-row {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+}
+
+.info-row p {
+  margin: 0.5rem;
+  font-size: 1rem;
+}
+
+.certificates-container h2 {
+  font-size: 1.8rem;
+  font-weight: bold;
+}

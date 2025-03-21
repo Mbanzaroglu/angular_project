@@ -1,0 +1,57 @@
+<h2 mat-dialog-title>{{ (isEditMode ? 'EDIT_CREW' : 'ADD_NEW_CREW') | translate }}</h2>
+<mat-dialog-content>
+  <form [formGroup]="crewForm">
+    <mat-form-field appearance="fill">
+      <mat-label>{{ 'FIRST_NAME' | translate }}</mat-label>
+      <input matInput formControlName="firstName" required>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>{{ 'LAST_NAME' | translate }}</mat-label>
+      <input matInput formControlName="lastName" required>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>{{ 'NATIONALITY' | translate }}</mat-label>
+      <mat-select formControlName="nationality" required>
+        <mat-option *ngFor="let nationality of nationalities" [value]="nationality">
+          {{ nationality }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>{{ 'TITLE' | translate }}</mat-label>
+      <mat-select formControlName="title" required>
+        <mat-option *ngFor="let title of titles" [value]="title">
+          {{ title }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>{{ 'DAYS_ON_BOARD' | translate }}</mat-label>
+      <input matInput type="number" formControlName="daysOnBoard" required>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>{{ 'DAILY_RATE' | translate }}</mat-label>
+      <input matInput type="number" formControlName="dailyRate" required>
+    </mat-form-field>
+
+    <mat-form-field appearance="fill">
+      <mat-label>{{ 'CURRENCY' | translate }}</mat-label>
+      <mat-select formControlName="currency" required>
+        <mat-option *ngFor="let currency of currencies" [value]="currency">
+          {{ getCurrencyDetail(currency).code }} | {{ getCurrencyDetail(currency).name }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onCancel()">{{ 'CANCEL' | translate }}</button>
+  <button mat-raised-button color="primary" (click)="onSubmit()" [disabled]="!crewForm.valid">
+    {{ 'SAVE' | translate }}
+  </button>
+</mat-dialog-actions>

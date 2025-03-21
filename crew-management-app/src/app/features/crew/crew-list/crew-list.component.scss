@@ -1,0 +1,59 @@
+.crew-list {
+  margin: 2rem auto;
+  max-width: 1200px;
+}
+
+.action-buttons {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 1rem;
+}
+
+/* src/styles.scss */
+.crew-list td.mat-cell {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.crew-list td.mat-cell mat-form-field {
+  width: 70px !important;
+  margin: 0 !important;
+}
+
+.crew-list td.mat-cell mat-form-field .mat-form-field-wrapper {
+  padding-bottom: 0 !important;
+}
+
+.crew-list td.mat-cell mat-form-field .mat-form-field-infix {
+  padding: 0.2rem 0 !important;
+  font-size: 12px !important;
+}
+
+.crew-list td.mat-cell mat-form-field mat-select {
+  font-size: 12px !important;
+}
+
+.crew-list mat-option {
+  font-size: 12px !important;
+  line-height: 2em !important;
+}
+
+.crew-list td.mat-cell mat-form-field .mat-select-arrow {
+  transform: scale(0.8) !important;
+}
+
+// crew-list.component.scss
+
+// Mat-select panelinin genişliğini artır
+.custom-select-panel {
+  min-width: 150px !important; // Mat-form-field genişliğiyle uyumlu
+  max-width: 200px !important; // Maksimum genişlik sınırı (isteğe bağlı)
+}
+
+// Mat-option’ların içeriğini daha iyi göstermek için padding ekleyebiliriz
+.mat-option {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

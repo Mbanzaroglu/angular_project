@@ -1,0 +1,31 @@
+{
+  "HELLO": "Hello, DigitAll Ocean",
+  "FIRST_NAME": "First Name",
+  "LAST_NAME": "Last Name",
+  "NATIONALITY": "Nationality",
+  "TITLE": "Title",
+  "DAYS_ON_BOARD": "Days On Board",
+  "DAILY_RATE": "Daily Rate",
+  "CURRENCY": "Currency",
+  "TOTAL_INCOME": "Total Income",
+  "CERTIFICATES": {
+    "TITLE": "Certificates",
+    "NAME": "Name",
+    "DESCRIPTION": "Description",
+    "ISSUE_DATE": "Issue Date",
+    "EXPIRY_DATE": "Expiry Date",
+    "CLOSE": "Close"
+  },
+  "ACTION": "Action",
+  "BACK_TO_CREW_LIST": "Back to the Crew List",
+  "CREW_DETAILS": "Crew Details",
+  "CREW_CERTIFICATES": "Crew Certificates",
+  "NO_CERTIFICATES": "No certificates found for this crew member.",
+  "ADD_NEW_CREW": "Add New Crew",
+  "EDIT_CREW": "Edit Crew",
+  "ADD_NEW_CERTIFICATE_TYPE": "Add New Certificate Type",
+  "CANCEL": "Cancel",
+  "SAVE": "Save",
+  "ADD_CERTIFICATE": "Add New Certificate",
+  "CERTIFICATE_NAME": "Certificate Name"
+}

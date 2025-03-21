@@ -1,0 +1,31 @@
+{
+  "HELLO": "Bonjour, DigitAll Ocean",
+  "FIRST_NAME": "Prénom",
+  "LAST_NAME": "Nom de famille",
+  "NATIONALITY": "Nationalité",
+  "TITLE": "Titre",
+  "DAYS_ON_BOARD": "Jours à bord",
+  "DAILY_RATE": "Taux journalier",
+  "CURRENCY": "Devise",
+  "TOTAL_INCOME": "Revenu total",
+  "CERTIFICATES": {
+    "TITLE": "Certificats",
+    "NAME": "Nom",
+    "DESCRIPTION": "Description",
+    "ISSUE_DATE": "Date d'émission",
+    "EXPIRY_DATE": "Date d'expiration",
+    "CLOSE": "Fermer"
+  },
+  "ACTION": "Action",
+  "BACK_TO_CREW_LIST": "Retour à la liste de l'équipage",
+  "CREW_DETAILS": "Détails de l'équipage",
+  "CREW_CERTIFICATES": "Certificats de l'équipage",
+  "NO_CERTIFICATES": "Aucun certificat trouvé pour cet équipier.",
+  "ADD_NEW_CREW": "Ajouter un nouvel équipage",
+  "EDIT_CREW": "Modifier l'équipage",
+  "ADD_NEW_CERTIFICATE_TYPE": "Ajouter un nouveau type de certificat",
+  "CANCEL": "Annuler",
+  "SAVE": "Enregistrer",
+  "ADD_CERTIFICATE": "Ajouter un nouveau certificat",
+  "CERTIFICATE_NAME": "Nom du certificat"
+}

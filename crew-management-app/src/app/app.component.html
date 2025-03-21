@@ -1,0 +1,14 @@
+<div class="app-container">
+  <h1 class="centered-title">{{ 'HELLO' | translate }}</h1>
+  <div class="language-selector">
+    <mat-form-field appearance="outline">
+      <mat-label>Select Language</mat-label>
+      <mat-select (selectionChange)="switchLanguage($event)" [value]="'en'">
+        <mat-option *ngFor="let lang of languages" [value]="lang.code">
+          {{ lang.code.toUpperCase() }} | {{ lang.label }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
+  </div>
+  <router-outlet></router-outlet>
+</div>

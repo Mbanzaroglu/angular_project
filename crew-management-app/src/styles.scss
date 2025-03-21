@@ -1,0 +1,38 @@
+/* You can add global styles to this file, and also import other style files */
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+/* src/styles.scss */
+.crew-list td.mat-cell {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .crew-list td.mat-cell mat-form-field {
+    width: 70px;
+    margin: 0;
+  }
+  
+  .crew-list td.mat-cell mat-form-field .mat-form-field-wrapper {
+    padding-bottom: 0;
+  }
+  
+  .crew-list td.mat-cell mat-form-field .mat-form-field-infix {
+    padding: 0.2rem 0;
+    font-size: 12px;
+  }
+  
+  .crew-list td.mat-cell mat-form-field mat-select {
+    font-size: 12px;
+  }
+  
+  .crew-list mat-option {
+    font-size: 12px;
+    line-height: 2em;
+  }
+  
+  .crew-list td.mat-cell mat-form-field .mat-select-arrow {
+    transform: scale(0.8);
+  }
