@@ -41,7 +41,7 @@ export class CertificateTypeModalComponent {
     if (this.certificateTypeForm.valid) {
       const newCertificateType: CertificateType = {
         ...this.certificateTypeForm.value,
-        id: Date.now() // Benzersiz bir ID oluştur
+        id: Date.now()
       };
       this.dialogRef.close(newCertificateType);
     }

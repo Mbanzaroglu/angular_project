@@ -3,7 +3,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogRef, MAT_DIALOG_DATA, MatDialogModule } from '@angular/material/dialog';
 import { MatTableModule } from '@angular/material/table';
-import { Certificate } from '@models/certificate.model';
+import { CertificateDetails } from '@models/certificate.model';
 import { CertificateService } from '@services/certificate.service';
 import { MatTableDataSource } from '@angular/material/table';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
@@ -24,7 +24,7 @@ import { CrewMember } from '@shared/models/crew-member.model';
 })
 export class CertificateModalComponent implements OnInit {
   displayedColumns: string[] = ['name', 'description', 'issueDate', 'expiryDate'];
-  dataSource = new MatTableDataSource<Certificate>();
+  dataSource = new MatTableDataSource<CertificateDetails>();
 
   constructor(
     public dialogRef: MatDialogRef<CertificateModalComponent>,

@@ -1,5 +1,4 @@
 <div class="crew-card-container">
-  <!-- Back Button ve Add Certificate Button -->
   <div class="header-actions">
     <button mat-button class="back-button" (click)="navigateToCrewList()" aria-label="Back to crew list">
       <mat-icon>arrow_back</mat-icon> {{ 'BACK_TO_CREW_LIST' | translate }}
@@ -10,7 +9,6 @@
   </div>
 
   <mat-tab-group (selectedIndexChange)="onTabChange($event)" [selectedIndex]="selectedTabIndex">
-    <!-- Crew Details Tab -->
     <mat-tab label="{{ 'CREW_DETAILS' | translate }}">
       <mat-card class="crew-card">
         <mat-card-header class="crew-card-header">
@@ -29,7 +27,6 @@
       </mat-card>
     </mat-tab>
 
-    <!-- Crew Certificates Tab -->
     <mat-tab label="{{ 'CREW_CERTIFICATES' | translate }}">
       <div class="certificates-container">
         <h2>{{ 'CERTIFICATES.TITLE' | translate }}</h2>
