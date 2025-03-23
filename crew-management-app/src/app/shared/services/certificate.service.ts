@@ -35,21 +35,21 @@ export class CertificateService {
 
   constructor(private crewService: CrewService) {
     console.log('CertificateService initialized');
-    this.assignCertificatesToCrew();
+    // this.assignCertificatesToCrew();
   }
 
-  assignCertificatesToCrew(): void {
-    console.log('Assigning certificates to crew members...');
-    this.crewService.getCrewList().subscribe(crewList => {
-      console.log('Crew list fetched:', crewList);
-      crewList.forEach(crewMember => {
-        const assignedCertificates = this.certificates
-          .filter(cert => cert.crewMemberId === crewMember.id)
-          .map(cert => cert.id);
-        crewMember.certificates = assignedCertificates;
-      });
-    });
-  }
+  // assignCertificatesToCrew(): void {
+  //   console.log('Assigning certificates to crew members...');
+  //   this.crewService.getCrewList().subscribe(crewList => {
+  //     console.log('Crew list fetched:', crewList);
+  //     crewList.forEach(crewMember => {
+  //       const assignedCertificates = this.certificates
+  //         .filter(cert => cert.crewMemberId === crewMember.id)
+  //         .map(cert => cert.id);
+  //       crewMember.certificates = assignedCertificates;
+  //     });
+  //   });
+  // }
 
   getCertificatesByCrewMember(crewMemberId: number): Observable<Certificate[]> {
     console.log(`Fetching certificates for crew member ID: ${crewMemberId}`);
@@ -64,21 +64,11 @@ export class CertificateService {
   }
 
   addCertificate(newCertificate: Certificate): void {
-    console.log('Adding new certificate:', newCertificate);
+    const lastId = this.certificates.length > 0 ? this.certificates[this.certificates.length - 1].id : 0;
+    newCertificate.id = lastId + 1;
+    console.log('Adding new certificate with updated ID:', newCertificate);
     this.certificates.push(newCertificate);
     console.log('Certificate added. Updated certificates list:', this.certificates);
-
-    // CrewMember'ın certificates array'ini güncelle
-    this.crewService.getCrewList().subscribe(crewList => {
-      const crewMember = crewList.find(member => member.id === newCertificate.crewMemberId);
-      if (crewMember) {
-        crewMember.certificates = [
-          ...crewMember.certificates,
-          newCertificate.id
-        ];
-        this.crewService.updateCrewList(crewList);
-      }
-    });
 
     this.certificatesAssignedSubject.next(true);
   }

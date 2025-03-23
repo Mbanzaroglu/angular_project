@@ -86,7 +86,6 @@ export class CrewModalComponent implements OnInit {
         ...formValue,
         id: this.isEditMode ? this.data.crewMember!.id : Date.now(),
         totalIncome: formValue.daysOnBoard * formValue.dailyRate,
-        certificates: this.isEditMode ? this.data.crewMember!.certificates : [],
         currency: formValue.currency // Currency enum’ı olarak zaten doğru tipte
       };
       this.dialogRef.close(updatedCrew);

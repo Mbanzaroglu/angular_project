@@ -9,11 +9,11 @@ import { Currency } from '@shared/enums/currency.enum';
 })
 export class CrewService {
   private crewList: CrewMember[] = [
-    { id: 1, firstName: 'John', lastName: 'Doe', nationality: 'American', title: 'Captain', daysOnBoard: 120, dailyRate: 300, currency: Currency.USD, totalIncome: 0, certificates: [] },
-    { id: 2, firstName: 'Jane', lastName: 'Smith', nationality: 'British', title: 'Engineer', daysOnBoard: 90, dailyRate: 250, currency: Currency.EUR, totalIncome: 0, certificates: [] },
-    { id: 3, firstName: 'Carlos', lastName: 'Gomez', nationality: 'Spanish', title: 'Cooker', daysOnBoard: 150, dailyRate: 200, currency: Currency.USD, totalIncome: 0, certificates: [] },
-    { id: 4, firstName: 'Anna', lastName: 'Ivanova', nationality: 'Russian', title: 'Mechanic', daysOnBoard: 110, dailyRate: 220, currency: Currency.USD, totalIncome: 0, certificates: [] },
-    { id: 5, firstName: 'Liu', lastName: 'Wei', nationality: 'Chinese', title: 'Deckhand', daysOnBoard: 130, dailyRate: 180, currency: Currency.EUR, totalIncome: 0, certificates: [] }
+    { id: 1, firstName: 'John', lastName: 'Doe', nationality: 'American', title: 'Captain', daysOnBoard: 120, dailyRate: 300, currency: Currency.USD, totalIncome: 0},
+    { id: 2, firstName: 'Jane', lastName: 'Smith', nationality: 'British', title: 'Engineer', daysOnBoard: 90, dailyRate: 250, currency: Currency.EUR, totalIncome: 0},
+    { id: 3, firstName: 'Carlos', lastName: 'Gomez', nationality: 'Spanish', title: 'Cooker', daysOnBoard: 150, dailyRate: 200, currency: Currency.USD, totalIncome: 0},
+    { id: 4, firstName: 'Anna', lastName: 'Ivanova', nationality: 'Russian', title: 'Mechanic', daysOnBoard: 110, dailyRate: 220, currency: Currency.USD, totalIncome: 0},
+    { id: 5, firstName: 'Liu', lastName: 'Wei', nationality: 'Chinese', title: 'Deckhand', daysOnBoard: 130, dailyRate: 180, currency: Currency.EUR, totalIncome: 0}
   ];
 
   private nationalityList: string[] = [
