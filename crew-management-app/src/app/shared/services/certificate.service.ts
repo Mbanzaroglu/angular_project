@@ -33,6 +33,8 @@ export class CertificateService {
   private certificatesAssignedSubject = new BehaviorSubject<boolean>(false);
   certificatesAssigned$ = this.certificatesAssignedSubject.asObservable();
 
+  
+
   constructor(private crewService: CrewService) {
     console.log('CertificateService initialized');
     // this.assignCertificatesToCrew();
@@ -64,14 +66,15 @@ export class CertificateService {
   }
 
   addCertificate(newCertificate: Certificate): void {
-    const lastId = this.certificates.length > 0 ? this.certificates[this.certificates.length - 1].id : 0;
-    newCertificate.id = lastId + 1;
+    newCertificate.id = this.generateNewCertificateId();
     console.log('Adding new certificate with updated ID:', newCertificate);
     this.certificates.push(newCertificate);
     console.log('Certificate added. Updated certificates list:', this.certificates);
 
     this.certificatesAssignedSubject.next(true);
   }
+
+
 
   // Yeni metod: Sertifika silme
   deleteCertificate(certificateId: number): void {
@@ -94,5 +97,9 @@ export class CertificateService {
   getCertificateTypes(): Observable<CertificateType[]> {
     console.log('Fetching all certificate types...');
     return of(this.certificateTypes);
+  }
+
+  generateNewCertificateId(): number {
+    return this.certificates.length > 0 ? this.certificates[this.certificates.length - 1].id + 1 : 1;
   }
 }
