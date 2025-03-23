@@ -22,8 +22,8 @@
         <mat-card-content class="crew-details">
           <div class="info-row">
             <p><strong>{{ 'DAYS_ON_BOARD' | translate }}:</strong> {{ crewMember?.daysOnBoard }}</p>
-            <p><strong>{{ 'DAILY_RATE' | translate }}:</strong> {{ crewMember?.dailyRate }} {{ crewMember?.currency }}</p>
-            <p><strong>{{ 'TOTAL_INCOME' | translate }}:</strong> {{ crewMember?.totalIncome }} {{ crewMember?.currency }}</p>
+            <p><strong>{{ 'DAILY_RATE' | translate }}:</strong> {{ crewMember?.dailyRate }} {{ getCurrencyName(crewMember?.currency) }} </p>
+            <p><strong>{{ 'TOTAL_INCOME' | translate }}:</strong> {{ crewMember?.totalIncome }} {{ getCurrencySymbol(crewMember?.currency) }}</p>
           </div>
         </mat-card-content>
       </mat-card>

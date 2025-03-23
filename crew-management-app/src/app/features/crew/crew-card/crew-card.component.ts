@@ -99,7 +99,18 @@ export class CrewCardComponent implements OnInit {
     console.log('Selected tab index:', this.selectedTabIndex);
   }
 
+  getCurrencySymbol(currency?: Currency): string {
+    if (!currency) return '';
+    return this.getCurrencyDetail(currency).symbol;
+  }
+  
+  getCurrencyName(currency?: Currency): string {
+    if (!currency) return '';
+    return this.getCurrencyDetail(currency).name;
+  }
+  
   getCurrencyDetail(currency: Currency) {
     return getCurrencyDetailById(currency);
   }
+  
 }
