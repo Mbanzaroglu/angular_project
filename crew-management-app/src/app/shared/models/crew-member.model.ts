@@ -12,6 +12,5 @@ export interface CrewMember {
     currency: Currency;
     totalIncome: number;
     discount?: number; // Opsiyonel
-    certificates: number[];
   }
   

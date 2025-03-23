@@ -40,7 +40,7 @@ export class AddCertificateModalComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: { crewMemberId: number }
   ) {
     this.certificateForm = this.fb.group({
-      certificateType: [null, Validators.required],
+      certificateType: ['', Validators.required], // typeId’yi tutacak
       issueDate: ['', Validators.required],
       expiryDate: ['', Validators.required]
     }, {
@@ -49,7 +49,7 @@ export class AddCertificateModalComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // CertificateService'ten certificateTypes'ı al
+    // CertificateService’ten certificateTypes’ı al
     this.certificateService.getCertificateTypes().subscribe(types => {
       this.certificateTypes = types;
     });
@@ -72,6 +72,13 @@ export class AddCertificateModalComponent implements OnInit {
       if (expiry <= issue) {
         control.get('expiryDate')?.setErrors({ expiryBeforeIssue: true });
         return { expiryBeforeIssue: true };
+      } else {
+        // Hata yoksa mevcut hataları temizle
+        const currentErrors = control.get('expiryDate')?.errors;
+        if (currentErrors && currentErrors['expiryBeforeIssue']) {
+          delete currentErrors['expiryBeforeIssue'];
+          control.get('expiryDate')?.setErrors(Object.keys(currentErrors).length ? currentErrors : null);
+        }
       }
     }
     return null;
@@ -89,6 +96,13 @@ export class AddCertificateModalComponent implements OnInit {
       if (expiry <= today) {
         control.get('expiryDate')?.setErrors({ expiryBeforeToday: true });
         return { expiryBeforeToday: true };
+      } else {
+        // Hata yoksa mevcut hataları temizle
+        const currentErrors = control.get('expiryDate')?.errors;
+        if (currentErrors && currentErrors['expiryBeforeToday']) {
+          delete currentErrors['expiryBeforeToday'];
+          control.get('expiryDate')?.setErrors(Object.keys(currentErrors).length ? currentErrors : null);
+        }
       }
     }
     return null;
@@ -98,7 +112,7 @@ export class AddCertificateModalComponent implements OnInit {
     if (this.certificateForm.valid) {
       const formValue = this.certificateForm.value;
       const newCertificate: Certificate = {
-        id: Date.now(),
+        id: this.certificateService.generateNewCertificateId(),
         name: formValue.certificateType.name,
         description: formValue.certificateType.description,
         issueDate: formValue.issueDate,

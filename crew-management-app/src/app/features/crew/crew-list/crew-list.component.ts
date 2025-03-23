@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { MatMenuModule } from '@angular/material/menu';
@@ -11,7 +11,7 @@ import { CommonModule } from '@angular/common';
 import { CrewService } from '@services/crew.service';
 import { CrewMember } from '@shared/models/crew-member.model';
 import { IncomeSummary } from '@models/income-summary.model';
-import { Observable, BehaviorSubject } from 'rxjs';
+import { Observable, BehaviorSubject, Subscription } from 'rxjs';
 import { CertificateModalComponent } from 'app/features/certificate/certificate-modal/certificate-modal.component';
 import { Router, RouterModule } from '@angular/router';
 import { CrewModalComponent } from '../crew-modal/crew-modal.component';
@@ -36,7 +36,7 @@ import { Currency, getCurrencyDetailById, getCurrencyCodeById } from '@shared/en
     RouterModule
   ]
 })
-export class CrewListComponent implements OnInit {
+export class CrewListComponent implements OnInit{
   displayedColumns: string[] = ['firstName', 'lastName', 'nationality', 'title', 'daysOnBoard', 'dailyRate', 'currency', 'totalIncome', 'certificates', 'action'];
 
   dataSource$: BehaviorSubject<CrewMember[]> = new BehaviorSubject<CrewMember[]>([]);
@@ -45,6 +45,8 @@ export class CrewListComponent implements OnInit {
   currencies: Currency[] = [];
 
   exchangeRate = 0.85;
+
+  private crewListSubscription: Subscription | undefined;
 
   constructor(
     private crewService: CrewService,
@@ -55,10 +57,8 @@ export class CrewListComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.crewService.getCrewList().subscribe(data => {
-      data.forEach(crew => {
-        crew.totalIncome = crew.daysOnBoard * crew.dailyRate;
-      });
+    // crewList$’a abone ol ve dataSource$’ı güncelle
+    this.crewListSubscription = this.crewService.getCrewList().subscribe(data => {
       this.dataSource$.next(data);
     });
 
@@ -93,7 +93,6 @@ export class CrewListComponent implements OnInit {
   }
 
   changeCurrency(row: CrewMember, newCurrency: Currency) {
-    // Orijinal dailyRate ve totalIncome değerlerini CrewService’ten al
     const originalDailyRateData = this.crewService.getOriginalDailyRate(row.id);
     const originalTotalIncomeData = this.crewService.getOriginalTotalIncome(row.id);
 
@@ -103,24 +102,18 @@ export class CrewListComponent implements OnInit {
     const originalDailyRateCurrency = originalDailyRateData ? originalDailyRateData.currency : row.currency;
     const originalTotalIncomeCurrency = originalTotalIncomeData ? originalTotalIncomeData.currency : row.currency;
 
-    // Currency’yi güncelle
     row.currency = newCurrency;
-
-    // dailyRate ve totalIncome’u orijinal para biriminden yeni para birimine dönüştür
     row.dailyRate = this.convertCurrency(originalDailyRate, originalDailyRateCurrency, row.currency);
     row.totalIncome = this.convertCurrency(originalTotalIncome, originalTotalIncomeCurrency, row.currency);
 
-    // dataSource$’ı güncelle
     const updatedData = this.dataSource$.getValue().map(item => (item.id === row.id ? { ...item, ...row } : item));
     this.dataSource$.next(updatedData);
-
-    // CrewService’teki crewList’i güncelle
     this.crewService.updateCrewList(updatedData);
   }
 
   deleteCrew(element: CrewMember) {
     this.crewService.deleteCrewMember(element.id);
-    this.incomeSummary$ = this.crewService.getIncomeSummary();
+    // incomeSummary$ zaten güncellenecek, manuel güncelleme yapmaya gerek yok
   }
 
   editCrew(element: CrewMember) {
@@ -135,17 +128,6 @@ export class CrewListComponent implements OnInit {
           crew.id === result.id ? result : crew
         );
         this.crewService.updateCrewList(updatedCrewList);
-        this.incomeSummary$ = this.crewService.getIncomeSummary();
-      }
-    });
-  }
-
-  navigateToCrewCard(element: CrewMember) {
-    console.log('Navigating to crew-card with ID:', element.id);
-    this.router.navigate(['/crew', 'crew-card', element.id]).then(success => {
-      console.log('Navigation success:', success);
-      if (!success) {
-        console.error('Navigation failed! Check route configuration.');
       }
     });
   }
@@ -158,7 +140,16 @@ export class CrewListComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         this.crewService.addCrewMember(result);
-        this.incomeSummary$ = this.crewService.getIncomeSummary();
+      }
+    });
+  }
+
+  navigateToCrewCard(element: CrewMember) {
+    console.log('Navigating to crew-card with ID:', element.id);
+    this.router.navigate(['/crew', 'crew-card', element.id]).then(success => {
+      console.log('Navigation success:', success);
+      if (!success) {
+        console.error('Navigation failed! Check route configuration.');
       }
     });
   }
@@ -174,7 +165,6 @@ export class CrewListComponent implements OnInit {
       if (result) {
         console.log('Adding new certificate type:', result);
         this.certificateService.addCertificateType(result);
-        this.incomeSummary$ = this.crewService.getIncomeSummary();
       }
     });
   }

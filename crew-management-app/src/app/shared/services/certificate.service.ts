@@ -33,23 +33,25 @@ export class CertificateService {
   private certificatesAssignedSubject = new BehaviorSubject<boolean>(false);
   certificatesAssigned$ = this.certificatesAssignedSubject.asObservable();
 
+  
+
   constructor(private crewService: CrewService) {
     console.log('CertificateService initialized');
-    this.assignCertificatesToCrew();
+    // this.assignCertificatesToCrew();
   }
 
-  assignCertificatesToCrew(): void {
-    console.log('Assigning certificates to crew members...');
-    this.crewService.getCrewList().subscribe(crewList => {
-      console.log('Crew list fetched:', crewList);
-      crewList.forEach(crewMember => {
-        const assignedCertificates = this.certificates
-          .filter(cert => cert.crewMemberId === crewMember.id)
-          .map(cert => cert.id);
-        crewMember.certificates = assignedCertificates;
-      });
-    });
-  }
+  // assignCertificatesToCrew(): void {
+  //   console.log('Assigning certificates to crew members...');
+  //   this.crewService.getCrewList().subscribe(crewList => {
+  //     console.log('Crew list fetched:', crewList);
+  //     crewList.forEach(crewMember => {
+  //       const assignedCertificates = this.certificates
+  //         .filter(cert => cert.crewMemberId === crewMember.id)
+  //         .map(cert => cert.id);
+  //       crewMember.certificates = assignedCertificates;
+  //     });
+  //   });
+  // }
 
   getCertificatesByCrewMember(crewMemberId: number): Observable<Certificate[]> {
     console.log(`Fetching certificates for crew member ID: ${crewMemberId}`);
@@ -64,49 +66,26 @@ export class CertificateService {
   }
 
   addCertificate(newCertificate: Certificate): void {
-    console.log('Adding new certificate:', newCertificate);
+    newCertificate.id = this.generateNewCertificateId();
+    console.log('Adding new certificate with updated ID:', newCertificate);
     this.certificates.push(newCertificate);
     console.log('Certificate added. Updated certificates list:', this.certificates);
-
-    // CrewMember'ın certificates array'ini güncelle
-    this.crewService.getCrewList().subscribe(crewList => {
-      const crewMember = crewList.find(member => member.id === newCertificate.crewMemberId);
-      if (crewMember) {
-        crewMember.certificates = [
-          ...crewMember.certificates,
-          newCertificate.id
-        ];
-        this.crewService.updateCrewList(crewList);
-      }
-    });
 
     this.certificatesAssignedSubject.next(true);
   }
 
+
+
   // Yeni metod: Sertifika silme
   deleteCertificate(certificateId: number): void {
     console.log(`Deleting certificate with ID: ${certificateId}`);
-    // Silinecek sertifikayı bul
-    const certificateToDelete = this.certificates.find(cert => cert.id === certificateId);
-    if (certificateToDelete) {
-      // certificates array'inden sertifikayı kaldır
-      this.certificates = this.certificates.filter(cert => cert.id !== certificateId);
-      console.log('Certificate deleted. Updated certificates list:', this.certificates);
+    // certificates array'inden sertifikayı kaldır
+    this.certificates = this.certificates.filter(cert => cert.id !== certificateId);
+    console.log('Certificate deleted. Updated certificates list:', this.certificates);
 
-      // İlgili CrewMember'ın certificates array'inden sertifika ID'sini kaldır
-      this.crewService.getCrewList().subscribe(crewList => {
-        const crewMember = crewList.find(member => member.id === certificateToDelete.crewMemberId);
-        if (crewMember) {
-          crewMember.certificates = crewMember.certificates.filter(id => id !== certificateId);
-          this.crewService.updateCrewList(crewList);
-        }
-      });
-
-      // Sertifikaların güncellendiğini bildir
-      this.certificatesAssignedSubject.next(true);
-    } else {
-      console.warn(`Certificate with ID ${certificateId} not found.`);
-    }
+    // Sertifikaların güncellendiğini bildir
+    this.certificatesAssignedSubject.next(true);
+    
   }
 
   addCertificateType(newCertificateType: CertificateType): void {
@@ -118,5 +97,9 @@ export class CertificateService {
   getCertificateTypes(): Observable<CertificateType[]> {
     console.log('Fetching all certificate types...');
     return of(this.certificateTypes);
+  }
+
+  generateNewCertificateId(): number {
+    return this.certificates.length > 0 ? this.certificates[this.certificates.length - 1].id + 1 : 1;
   }
 }

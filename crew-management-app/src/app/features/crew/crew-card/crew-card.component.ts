@@ -13,6 +13,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { MatDialog } from '@angular/material/dialog';
 import { AddCertificateModalComponent } from '../../certificate/add-certificate-modal/add-certificate-modal.component';
 import { MatButtonModule } from '@angular/material/button';
+import { Currency, getCurrencyDetailById, getCurrencyCodeById } from '@shared/enums/currency.enum';
 
 @Component({
   selector: 'app-crew-card',
@@ -62,10 +63,12 @@ export class CrewCardComponent implements OnInit {
   }
 
   loadCertificates(): void {
+    console.log('Loading certificates for crew member ID:', this.id);
     this.certificateService.getCertificatesByCrewMember(this.id).subscribe(certificates => {
       this.crewCertificates = certificates;
       console.log('Crew Certificates:', this.crewCertificates);
     });
+    console.log('Certificates loaded');
   }
 
   navigateToCrewList(): void {
@@ -81,6 +84,7 @@ export class CrewCardComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         this.certificateService.addCertificate(result);
+
         this.loadCertificates(); // Sertifika listesini güncelle
       }
     });
@@ -88,6 +92,7 @@ export class CrewCardComponent implements OnInit {
 
   deleteCertificate(certificateId: number): void {
     this.certificateService.deleteCertificate(certificateId);
+    console.log('Certificate deleted');
     this.loadCertificates(); // Sertifika listesini güncelle
   }
   
@@ -96,4 +101,19 @@ export class CrewCardComponent implements OnInit {
     this.selectedTabIndex = index;
     console.log('Selected tab index:', this.selectedTabIndex);
   }
+
+  getCurrencySymbol(currency?: Currency): string {
+    if (!currency) return '';
+    return this.getCurrencyDetail(currency).symbol;
+  }
+  
+  getCurrencyName(currency?: Currency): string {
+    if (!currency) return '';
+    return this.getCurrencyDetail(currency).name;
+  }
+  
+  getCurrencyDetail(currency: Currency) {
+    return getCurrencyDetailById(currency);
+  }
+  
 }
