@@ -1,5 +1,4 @@
 import { Routes } from '@angular/router';
-import { CertificateModalComponent } from '../../shared/components/certificate-modal/certificate-modal.component';
 import { CertificateTypeModalComponent } from './certificate-type-form/certificate-type-form.component';
 import { AddCertificateModalComponent } from './add-certificate-modal/add-certificate-modal.component';
 
