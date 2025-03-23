@@ -36,7 +36,7 @@ import { Currency, getCurrencyDetailById, getCurrencyCodeById } from '@shared/en
     RouterModule
   ]
 })
-export class CrewListComponent implements OnInit {
+export class CrewListComponent implements OnInit{
   displayedColumns: string[] = ['firstName', 'lastName', 'nationality', 'title', 'daysOnBoard', 'dailyRate', 'currency', 'totalIncome', 'certificates', 'action'];
 
   dataSource$: BehaviorSubject<CrewMember[]> = new BehaviorSubject<CrewMember[]>([]);
@@ -59,11 +59,7 @@ export class CrewListComponent implements OnInit {
   ngOnInit(): void {
     // crewList$’a abone ol ve dataSource$’ı güncelle
     this.crewListSubscription = this.crewService.getCrewList().subscribe(data => {
-      const updatedData = data.map(crew => ({
-        ...crew,
-        totalIncome: crew.daysOnBoard * crew.dailyRate
-      }));
-      this.dataSource$.next(updatedData);
+      this.dataSource$.next(data);
     });
 
     this.incomeSummary$ = this.crewService.getIncomeSummary();
@@ -72,13 +68,6 @@ export class CrewListComponent implements OnInit {
       this.currencies = currencies;
     });
   }
-
-  // ngOnDestroy(): void {
-  //   // Aboneliği temizle
-  //   if (this.crewListSubscription) {
-  //     this.crewListSubscription.unsubscribe();
-  //   }
-  // }
 
   openCertificateModal(crew: CrewMember) {
     console.log('Opening certificate modal for crew member:', crew);
@@ -124,7 +113,7 @@ export class CrewListComponent implements OnInit {
 
   deleteCrew(element: CrewMember) {
     this.crewService.deleteCrewMember(element.id);
-    this.incomeSummary$ = this.crewService.getIncomeSummary();
+    // incomeSummary$ zaten güncellenecek, manuel güncelleme yapmaya gerek yok
   }
 
   editCrew(element: CrewMember) {
@@ -139,7 +128,6 @@ export class CrewListComponent implements OnInit {
           crew.id === result.id ? result : crew
         );
         this.crewService.updateCrewList(updatedCrewList);
-        this.incomeSummary$ = this.crewService.getIncomeSummary();
       }
     });
   }
@@ -152,8 +140,6 @@ export class CrewListComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         this.crewService.addCrewMember(result);
-        // crewList$ zaten güncellemeyi bildirecek, bu yüzden bindData()’ı tekrar çağırmaya gerek yok
-        this.incomeSummary$ = this.crewService.getIncomeSummary();
       }
     });
   }
@@ -179,7 +165,6 @@ export class CrewListComponent implements OnInit {
       if (result) {
         console.log('Adding new certificate type:', result);
         this.certificateService.addCertificateType(result);
-        this.incomeSummary$ = this.crewService.getIncomeSummary();
       }
     });
   }

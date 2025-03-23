@@ -47,6 +47,9 @@ export class CrewService {
   private crewListSubject = new BehaviorSubject<CrewMember[]>(this.crewList);
   crewList$ = this.crewListSubject.asObservable();
 
+  private incomeSummarySubject = new BehaviorSubject<IncomeSummary[]>([]);
+  incomeSummary$ = this.incomeSummarySubject.asObservable();
+
   private exchangeRate: number = 0.85;
 
   private originalDailyRates: Map<number, { value: number; currency: Currency }> = new Map();
@@ -60,18 +63,15 @@ export class CrewService {
       this.originalTotalIncomes.set(crew.id, { value: crew.totalIncome, currency: crew.currency });
     });
     this.crewListSubject.next(this.crewList);
+
+    // crewList$’a abone ol ve her değişiklikte incomeSummary$’ı güncelle
+    this.crewList$.subscribe(crewList => {
+      this.updateIncomeSummary(crewList);
+    });
   }
 
-  getCrewList(): Observable<CrewMember[]> {
-    return this.crewList$;
-  }
-
-  getCurrencies(): Observable<Currency[]> {
-    return of(this.currencyList);
-  }
-
-  getIncomeSummary(): Observable<IncomeSummary[]> {
-    const totalUSD = this.crewList.reduce((acc, member) => {
+  private updateIncomeSummary(crewList: CrewMember[]): void {
+    const totalUSD = crewList.reduce((acc, member) => {
       const original = this.originalTotalIncomes.get(member.id);
       if (!original) return acc;
       if (original.currency === Currency.USD) {
@@ -81,7 +81,7 @@ export class CrewService {
       }
     }, 0);
 
-    const totalEUR = this.crewList.reduce((acc, member) => {
+    const totalEUR = crewList.reduce((acc, member) => {
       const original = this.originalTotalIncomes.get(member.id);
       if (!original) return acc;
       if (original.currency === Currency.EUR) {
@@ -96,7 +96,19 @@ export class CrewService {
       { currency: Currency.EUR, totalIncome: totalEUR }
     ];
 
-    return new BehaviorSubject(summary).asObservable();
+    this.incomeSummarySubject.next(summary);
+  }
+
+  getCrewList(): Observable<CrewMember[]> {
+    return this.crewList$;
+  }
+
+  getCurrencies(): Observable<Currency[]> {
+    return of(this.currencyList);
+  }
+
+  getIncomeSummary(): Observable<IncomeSummary[]> {
+    return this.incomeSummary$;
   }
 
   deleteCrewMember(id: number): void {
@@ -108,7 +120,7 @@ export class CrewService {
 
   addCrewMember(newCrew: CrewMember): void {
     console.log('Adding new crew member:', newCrew);
-    newCrew.totalIncome = newCrew.daysOnBoard * newCrew.dailyRate; // totalIncome’u hesapla
+    newCrew.totalIncome = newCrew.daysOnBoard * newCrew.dailyRate;
     this.crewList.push(newCrew);
     this.originalDailyRates.set(newCrew.id, { value: newCrew.dailyRate, currency: newCrew.currency });
     this.originalTotalIncomes.set(newCrew.id, { value: newCrew.totalIncome, currency: newCrew.currency });
@@ -118,10 +130,12 @@ export class CrewService {
   }
 
   updateCrewList(updatedCrewList: CrewMember[]): void {
-    this.crewList = updatedCrewList.map(crew => ({
-      ...crew,
-      totalIncome: crew.daysOnBoard * crew.dailyRate // totalIncome’u güncelle
-    }));
+    this.crewList = updatedCrewList.map(crew => {
+      const updatedCrew = { ...crew };
+      updatedCrew.totalIncome = updatedCrew.daysOnBoard * updatedCrew.dailyRate;
+      this.originalTotalIncomes.set(updatedCrew.id, { value: updatedCrew.totalIncome, currency: updatedCrew.currency });
+      return updatedCrew;
+    });
     this.crewListSubject.next(this.crewList);
     console.log('Crew list updated:', this.crewList);
   }
