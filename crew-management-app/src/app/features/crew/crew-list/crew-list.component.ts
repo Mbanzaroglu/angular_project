@@ -12,7 +12,7 @@ import { CrewService } from '@services/crew.service';
 import { CrewMember } from '@shared/models/crew-member.model';
 import { IncomeSummary } from '@models/income-summary.model';
 import { Observable, BehaviorSubject, Subscription } from 'rxjs';
-import { CertificateModalComponent } from 'app/features/certificate/certificate-modal/certificate-modal.component';
+import { CertificateModalComponent } from '@shared/components/certificate-modal/certificate-modal.component';
 import { Router, RouterModule } from '@angular/router';
 import { CrewModalComponent } from '../crew-modal/crew-modal.component';
 import { CertificateService } from '@shared/services/certificate.service';

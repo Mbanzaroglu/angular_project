@@ -13,7 +13,9 @@ import { TranslateModule } from '@ngx-translate/core';
 import { MatDialog } from '@angular/material/dialog';
 import { AddCertificateModalComponent } from '../../certificate/add-certificate-modal/add-certificate-modal.component';
 import { MatButtonModule } from '@angular/material/button';
-import { Currency, getCurrencyDetailById, getCurrencyCodeById } from '@shared/enums/currency.enum';
+import { MatTableModule } from '@angular/material/table';
+import { MatTableDataSource } from '@angular/material/table';
+import { Currency, getCurrencyDetailById } from '@shared/enums/currency.enum';
 
 @Component({
   selector: 'app-crew-card',
@@ -26,8 +28,8 @@ import { Currency, getCurrencyDetailById, getCurrencyCodeById } from '@shared/en
     MatCardModule,
     MatListModule,
     MatIconModule,
-    MatCardModule,
     MatButtonModule,
+    MatTableModule,
     TranslateModule
   ]
 })
@@ -35,6 +37,8 @@ export class CrewCardComponent implements OnInit {
   id: number = 0;
   crewMember: CrewMember | undefined;
   crewCertificates: CertificateDetails[] = [];
+  displayedColumns: string[] = ['name', 'description', 'issueDate', 'expiryDate'];
+  dataSource = new MatTableDataSource<CertificateDetails>();
   selectedTabIndex: number = 0;
 
   constructor(
@@ -63,6 +67,7 @@ export class CrewCardComponent implements OnInit {
     console.log('Loading certificates for crew member ID:', this.id);
     this.certificateService.getCertificatesByCrewMember(this.id).subscribe(certificates => {
       this.crewCertificates = certificates;
+      this.dataSource.data = certificates;
       console.log('Crew Certificates:', this.crewCertificates);
     });
     console.log('Certificates loaded');
@@ -83,12 +88,6 @@ export class CrewCardComponent implements OnInit {
         this.loadCertificates();
       }
     });
-  }
-
-  deleteCertificate(certificateId: number): void {
-    this.certificateService.deleteCertificate(certificateId);
-    console.log('Certificate deleted');
-    this.loadCertificates();
   }
 
   onTabChange(index: number): void {
