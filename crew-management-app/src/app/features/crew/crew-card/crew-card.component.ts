@@ -13,6 +13,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { MatDialog } from '@angular/material/dialog';
 import { AddCertificateModalComponent } from '../../certificate/add-certificate-modal/add-certificate-modal.component';
 import { MatButtonModule } from '@angular/material/button';
+import { Currency, getCurrencyDetailById, getCurrencyCodeById } from '@shared/enums/currency.enum';
 
 @Component({
   selector: 'app-crew-card',
@@ -88,6 +89,7 @@ export class CrewCardComponent implements OnInit {
 
   deleteCertificate(certificateId: number): void {
     this.certificateService.deleteCertificate(certificateId);
+    console.log('Certificate deleted');
     this.loadCertificates(); // Sertifika listesini güncelle
   }
   
@@ -95,5 +97,9 @@ export class CrewCardComponent implements OnInit {
   onTabChange(index: number): void {
     this.selectedTabIndex = index;
     console.log('Selected tab index:', this.selectedTabIndex);
+  }
+
+  getCurrencyDetail(currency: Currency) {
+    return getCurrencyDetailById(currency);
   }
 }

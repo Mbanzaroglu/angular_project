@@ -9,11 +9,11 @@ import { Currency } from '@shared/enums/currency.enum';
 })
 export class CrewService {
   private crewList: CrewMember[] = [
-    { id: 1, firstName: 'John', lastName: 'Doe', nationality: 'American', title: 'Captain', daysOnBoard: 120, dailyRate: 300, currency: Currency.USD, totalIncome: 36000, certificates: [] },
-    { id: 2, firstName: 'Jane', lastName: 'Smith', nationality: 'British', title: 'Engineer', daysOnBoard: 90, dailyRate: 250, currency: Currency.EUR, totalIncome: 22500, certificates: [] },
-    { id: 3, firstName: 'Carlos', lastName: 'Gomez', nationality: 'Spanish', title: 'Cooker', daysOnBoard: 150, dailyRate: 200, currency: Currency.USD, totalIncome: 30000, certificates: [] },
-    { id: 4, firstName: 'Anna', lastName: 'Ivanova', nationality: 'Russian', title: 'Mechanic', daysOnBoard: 110, dailyRate: 220, currency: Currency.USD, totalIncome: 24200, certificates: [] },
-    { id: 5, firstName: 'Liu', lastName: 'Wei', nationality: 'Chinese', title: 'Deckhand', daysOnBoard: 130, dailyRate: 180, currency: Currency.EUR, totalIncome: 23400, certificates: [] }
+    { id: 1, firstName: 'John', lastName: 'Doe', nationality: 'American', title: 'Captain', daysOnBoard: 120, dailyRate: 300, currency: Currency.USD, totalIncome: 0, certificates: [] },
+    { id: 2, firstName: 'Jane', lastName: 'Smith', nationality: 'British', title: 'Engineer', daysOnBoard: 90, dailyRate: 250, currency: Currency.EUR, totalIncome: 0, certificates: [] },
+    { id: 3, firstName: 'Carlos', lastName: 'Gomez', nationality: 'Spanish', title: 'Cooker', daysOnBoard: 150, dailyRate: 200, currency: Currency.USD, totalIncome: 0, certificates: [] },
+    { id: 4, firstName: 'Anna', lastName: 'Ivanova', nationality: 'Russian', title: 'Mechanic', daysOnBoard: 110, dailyRate: 220, currency: Currency.USD, totalIncome: 0, certificates: [] },
+    { id: 5, firstName: 'Liu', lastName: 'Wei', nationality: 'Chinese', title: 'Deckhand', daysOnBoard: 130, dailyRate: 180, currency: Currency.EUR, totalIncome: 0, certificates: [] }
   ];
 
   private nationalityList: string[] = [
@@ -49,16 +49,17 @@ export class CrewService {
 
   private exchangeRate: number = 0.85;
 
-  // Orijinal dailyRate ve totalIncome değerlerini saklamak için Map’ler
   private originalDailyRates: Map<number, { value: number; currency: Currency }> = new Map();
   private originalTotalIncomes: Map<number, { value: number; currency: Currency }> = new Map();
 
   constructor() {
-    // Başlangıçta orijinal değerleri sakla
+    // Başlangıçta orijinal değerleri sakla ve totalIncome’u hesapla
     this.crewList.forEach(crew => {
+      crew.totalIncome = crew.daysOnBoard * crew.dailyRate;
       this.originalDailyRates.set(crew.id, { value: crew.dailyRate, currency: crew.currency });
       this.originalTotalIncomes.set(crew.id, { value: crew.totalIncome, currency: crew.currency });
     });
+    this.crewListSubject.next(this.crewList);
   }
 
   getCrewList(): Observable<CrewMember[]> {
@@ -107,15 +108,20 @@ export class CrewService {
 
   addCrewMember(newCrew: CrewMember): void {
     console.log('Adding new crew member:', newCrew);
+    newCrew.totalIncome = newCrew.daysOnBoard * newCrew.dailyRate; // totalIncome’u hesapla
     this.crewList.push(newCrew);
     this.originalDailyRates.set(newCrew.id, { value: newCrew.dailyRate, currency: newCrew.currency });
     this.originalTotalIncomes.set(newCrew.id, { value: newCrew.totalIncome, currency: newCrew.currency });
     this.crewListSubject.next(this.crewList);
     console.log('Crew member added. Updated crew list:', this.crewList);
+    console.log('Crew Member Subject:', this.crewList$);
   }
 
   updateCrewList(updatedCrewList: CrewMember[]): void {
-    this.crewList = updatedCrewList;
+    this.crewList = updatedCrewList.map(crew => ({
+      ...crew,
+      totalIncome: crew.daysOnBoard * crew.dailyRate // totalIncome’u güncelle
+    }));
     this.crewListSubject.next(this.crewList);
     console.log('Crew list updated:', this.crewList);
   }
