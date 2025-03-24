@@ -12,9 +12,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatDialog } from '@angular/material/dialog';
 import { AddCertificateModalComponent } from '../../certificate/add-certificate-modal/add-certificate-modal.component';
+import { CertificateModalComponent } from '@shared/components/certificate-modal/certificate-modal.component';
 import { MatButtonModule } from '@angular/material/button';
-import { MatTableModule } from '@angular/material/table';
-import { MatTableDataSource } from '@angular/material/table';
 import { Currency, getCurrencyDetailById } from '@shared/enums/currency.enum';
 
 @Component({
@@ -29,16 +28,15 @@ import { Currency, getCurrencyDetailById } from '@shared/enums/currency.enum';
     MatListModule,
     MatIconModule,
     MatButtonModule,
-    MatTableModule,
-    TranslateModule
+    TranslateModule,
+    CertificateModalComponent
   ]
 })
 export class CrewCardComponent implements OnInit {
   id: number = 0;
   crewMember: CrewMember | undefined;
   crewCertificates: CertificateDetails[] = [];
-  displayedColumns: string[] = ['name', 'description', 'issueDate', 'expiryDate'];
-  dataSource = new MatTableDataSource<CertificateDetails>();
+  hasCertificates: boolean = false;
   selectedTabIndex: number = 0;
 
   constructor(
@@ -54,23 +52,41 @@ export class CrewCardComponent implements OnInit {
   ngOnInit(): void {
     const paramId = this.route.snapshot.paramMap.get('id');
     this.id = paramId ? +paramId : 0;
+    console.log('CrewCardComponent initialized with ID:', this.id);
 
-    this.crewService.getCrewList().subscribe(crewList => {
-      this.crewMember = crewList.find(member => member.id === this.id);
-      console.log('Crew Member:', this.crewMember);
-    });
-
+    this.loadCrewMember();
     this.loadCertificates();
   }
 
-  loadCertificates(): void {
-    console.log('Loading certificates for crew member ID:', this.id);
-    this.certificateService.getCertificatesByCrewMember(this.id).subscribe(certificates => {
-      this.crewCertificates = certificates;
-      this.dataSource.data = certificates;
-      console.log('Crew Certificates:', this.crewCertificates);
+  loadCrewMember(): void {
+    this.crewService.getCrewList().subscribe({
+      next: (crewList) => {
+        this.crewMember = crewList.find(member => member.id === this.id);
+        if (!this.crewMember) {
+          console.error('Crew member not found for ID:', this.id);
+        } else {
+          console.log('Crew member loaded:', this.crewMember);
+        }
+      },
+      error: (err) => {
+        console.error('Error loading crew list:', err);
+      }
     });
-    console.log('Certificates loaded');
+  }
+
+  loadCertificates(): void {
+    this.certificateService.getCertificatesByCrewMember(this.id).subscribe({
+      next: (certificates) => {
+        this.crewCertificates = certificates;
+        this.hasCertificates = certificates.length > 0;
+        console.log('Certificates loaded for crew member ID:', this.id, this.crewCertificates);
+      },
+      error: (err) => {
+        console.error('Error loading certificates:', err);
+        this.crewCertificates = [];
+        this.hasCertificates = false;
+      }
+    });
   }
 
   navigateToCrewList(): void {

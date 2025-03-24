@@ -36,7 +36,7 @@ import { Currency, getCurrencyDetailById, getCurrencyCodeById } from '@shared/en
     RouterModule
   ]
 })
-export class CrewListComponent implements OnInit{
+export class CrewListComponent implements OnInit, OnDestroy {
   displayedColumns: string[] = ['firstName', 'lastName', 'nationality', 'title', 'daysOnBoard', 'dailyRate', 'currency', 'totalIncome', 'certificates', 'action'];
 
   dataSource$: BehaviorSubject<CrewMember[]> = new BehaviorSubject<CrewMember[]>([]);
@@ -59,6 +59,7 @@ export class CrewListComponent implements OnInit{
   ngOnInit(): void {
     // crewList$’a abone ol ve dataSource$’ı güncelle
     this.crewListSubscription = this.crewService.getCrewList().subscribe(data => {
+      console.log('Crew list loaded:', data);
       this.dataSource$.next(data);
     });
 
@@ -67,6 +68,12 @@ export class CrewListComponent implements OnInit{
     this.crewService.getCurrencies().subscribe(currencies => {
       this.currencies = currencies;
     });
+  }
+
+  ngOnDestroy(): void {
+    if (this.crewListSubscription) {
+      this.crewListSubscription.unsubscribe();
+    }
   }
 
   openCertificateModal(crew: CrewMember) {
@@ -113,7 +120,6 @@ export class CrewListComponent implements OnInit{
 
   deleteCrew(element: CrewMember) {
     this.crewService.deleteCrewMember(element.id);
-    // incomeSummary$ zaten güncellenecek, manuel güncelleme yapmaya gerek yok
   }
 
   editCrew(element: CrewMember) {

@@ -3,7 +3,6 @@ import { Certificate, CertificateDetails } from '../models/certificate.model';
 import { BehaviorSubject, Observable, of } from 'rxjs';
 import { CertificateType } from '@shared/models/certificate-type.model';
 import { CrewService } from './crew.service';
-import { CrewMember } from '@shared/models/crew-member.model';
 
 @Injectable({
   providedIn: 'root'
@@ -33,12 +32,10 @@ export class CertificateService {
   private certificatesSubject = new BehaviorSubject<Certificate[]>(this.certificates);
   certificates$ = this.certificatesSubject.asObservable();
 
-  constructor(private crewService: CrewService) {
-    console.log('CertificateService initialized');
-  }
+  constructor(private crewService: CrewService) {}
 
   getCertificatesByCrewMember(crewMemberId: number): Observable<CertificateDetails[]> {
-    console.log(`Fetching certificates for crew member ID: ${crewMemberId}`);
+    console.log('Fetching certificates for crew member ID:', crewMemberId);
     const crewCertificates = this.certificates.filter(cert => cert.crewMemberId === crewMemberId);
 
     const certificatesDetails: CertificateDetails[] = crewCertificates.map(cert => {
@@ -53,43 +50,37 @@ export class CertificateService {
       };
     });
 
-    console.log(`Certificates for crew member ${crewMemberId}:`, certificatesDetails);
+    console.log('Certificates for crew member ID:', crewMemberId, certificatesDetails);
     return of(certificatesDetails);
   }
 
   getCertificates(): Observable<Certificate[]> {
-    console.log('Fetching all certificates...');
     return of(this.certificates);
   }
 
   addCertificate(newCertificate: Certificate): void {
     newCertificate.id = this.generateNewCertificateId();
-    console.log('Adding new certificate with updated ID:', newCertificate);
     this.certificates.push(newCertificate);
     this.certificatesSubject.next(this.certificates);
-    console.log('Certificate added. Updated certificates list:', this.certificates);
+
+    this.crewService.getCrewList().subscribe(crewList => {
+      const crewMember = crewList.find(member => member.id === newCertificate.crewMemberId);
+    });
   }
 
   deleteCertificate(certificateId: number): void {
-    console.log(`Deleting certificate with ID: ${certificateId}`);
     const certificateToDelete = this.certificates.find(cert => cert.id === certificateId);
     if (certificateToDelete) {
       this.certificates = this.certificates.filter(cert => cert.id !== certificateId);
       this.certificatesSubject.next(this.certificates);
-      console.log('Certificate deleted. Updated certificates list:', this.certificates);
-    } else {
-      console.warn(`Certificate with ID ${certificateId} not found.`);
     }
   }
 
   addCertificateType(newCertificateType: CertificateType): void {
-    console.log('Adding new certificate type:', newCertificateType);
     this.certificateTypes.push(newCertificateType);
-    console.log('Certificate type added. Updated certificate types list:', this.certificateTypes);
   }
 
   getCertificateTypes(): Observable<CertificateType[]> {
-    console.log('Fetching all certificate types...');
     return of(this.certificateTypes);
   }
 
