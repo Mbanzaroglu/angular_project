@@ -1,5 +1,4 @@
 import { Currency } from "@shared/enums/currency.enum";
-import { Certificate } from "./certificate.model";
 
 export interface CrewMember {
     id: number;

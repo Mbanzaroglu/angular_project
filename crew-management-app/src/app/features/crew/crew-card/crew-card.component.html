@@ -1,5 +1,4 @@
 <div class="crew-card-container">
-  <!-- Back Button ve Add Certificate Button -->
   <div class="header-actions">
     <button mat-button class="back-button" (click)="navigateToCrewList()" aria-label="Back to crew list">
       <mat-icon>arrow_back</mat-icon> {{ 'BACK_TO_CREW_LIST' | translate }}
@@ -10,7 +9,6 @@
   </div>
 
   <mat-tab-group (selectedIndexChange)="onTabChange($event)" [selectedIndex]="selectedTabIndex">
-    <!-- Crew Details Tab -->
     <mat-tab label="{{ 'CREW_DETAILS' | translate }}">
       <mat-card class="crew-card">
         <mat-card-header class="crew-card-header">
@@ -29,24 +27,10 @@
       </mat-card>
     </mat-tab>
 
-    <!-- Crew Certificates Tab -->
     <mat-tab label="{{ 'CREW_CERTIFICATES' | translate }}">
       <div class="certificates-container">
-        <h2>{{ 'CERTIFICATES.TITLE' | translate }}</h2>
-        <ng-container *ngIf="crewCertificates.length; else noCerts">
-          <mat-card *ngFor="let certificate of crewCertificates" class="certificate-card">
-            <mat-card-title>{{ certificate.name }}</mat-card-title>
-            <mat-card-subtitle>{{ certificate.description }}</mat-card-subtitle>
-            <mat-card-content>
-              <p><strong>{{ 'CERTIFICATES.ISSUE_DATE' | translate }}:</strong> {{ certificate.issueDate }}</p>
-              <p><strong>{{ 'CERTIFICATES.EXPIRY_DATE' | translate }}:</strong> {{ certificate.expiryDate }}</p>
-            </mat-card-content>
-            <mat-card-actions>
-              <button mat-icon-button color="warn" (click)="deleteCertificate(certificate.id)" aria-label="Delete certificate">
-                <mat-icon>delete</mat-icon>
-              </button>
-            </mat-card-actions>
-          </mat-card>
+        <ng-container *ngIf="hasCertificates; else noCerts">
+          <app-certificate-modal [crewMemberId]="id" [isDialog]="false"></app-certificate-modal>
         </ng-container>
         <ng-template #noCerts>
           <p>{{ 'NO_CERTIFICATES' | translate }}</p>

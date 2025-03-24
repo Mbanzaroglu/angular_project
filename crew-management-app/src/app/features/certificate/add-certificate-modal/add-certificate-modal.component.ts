@@ -40,7 +40,7 @@ export class AddCertificateModalComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: { crewMemberId: number }
   ) {
     this.certificateForm = this.fb.group({
-      certificateType: ['', Validators.required], // typeId’yi tutacak
+      certificateType: ['', Validators.required],
       issueDate: ['', Validators.required],
       expiryDate: ['', Validators.required]
     }, {
@@ -49,18 +49,15 @@ export class AddCertificateModalComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // CertificateService’ten certificateTypes’ı al
     this.certificateService.getCertificateTypes().subscribe(types => {
       this.certificateTypes = types;
     });
 
-    // Form değişikliklerini dinleyerek doğrulama hatalarını güncelle
     this.certificateForm.valueChanges.subscribe(() => {
       this.certificateForm.updateValueAndValidity();
     });
   }
 
-  // Özel doğrulayıcı: expiryDate, issueDate’ten büyük olmalı
   dateValidator(control: AbstractControl): ValidationErrors | null {
     const issueDate = control.get('issueDate')?.value;
     const expiryDate = control.get('expiryDate')?.value;
@@ -73,7 +70,6 @@ export class AddCertificateModalComponent implements OnInit {
         control.get('expiryDate')?.setErrors({ expiryBeforeIssue: true });
         return { expiryBeforeIssue: true };
       } else {
-        // Hata yoksa mevcut hataları temizle
         const currentErrors = control.get('expiryDate')?.errors;
         if (currentErrors && currentErrors['expiryBeforeIssue']) {
           delete currentErrors['expiryBeforeIssue'];
@@ -84,20 +80,18 @@ export class AddCertificateModalComponent implements OnInit {
     return null;
   }
 
-  // Özel doğrulayıcı: expiryDate, bugünden büyük olmalı
   expiryDateAfterTodayValidator(control: AbstractControl): ValidationErrors | null {
     const expiryDate = control.get('expiryDate')?.value;
 
     if (expiryDate) {
       const today = new Date();
-      today.setHours(0, 0, 0, 0); // Saat farkını ortadan kaldırmak için
+      today.setHours(0, 0, 0, 0);
       const expiry = new Date(expiryDate);
 
       if (expiry <= today) {
         control.get('expiryDate')?.setErrors({ expiryBeforeToday: true });
         return { expiryBeforeToday: true };
       } else {
-        // Hata yoksa mevcut hataları temizle
         const currentErrors = control.get('expiryDate')?.errors;
         if (currentErrors && currentErrors['expiryBeforeToday']) {
           delete currentErrors['expiryBeforeToday'];
@@ -113,17 +107,22 @@ export class AddCertificateModalComponent implements OnInit {
       const formValue = this.certificateForm.value;
       const newCertificate: Certificate = {
         id: this.certificateService.generateNewCertificateId(),
-        name: formValue.certificateType.name,
-        description: formValue.certificateType.description,
+        typeId: formValue.certificateType,
         issueDate: formValue.issueDate,
         expiryDate: formValue.expiryDate,
         crewMemberId: this.data.crewMemberId
       };
+      this.certificateService.addCertificate(newCertificate);
       this.dialogRef.close(newCertificate);
     }
   }
 
   onCancel() {
     this.dialogRef.close();
+  }
+
+  getCertificateTypeName(typeId: number): string {
+    const type = this.certificateTypes.find(t => t.id === typeId);
+    return type ? type.name : '';
   }
 }

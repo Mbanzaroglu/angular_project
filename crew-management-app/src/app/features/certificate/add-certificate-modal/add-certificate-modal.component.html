@@ -4,7 +4,10 @@
     <mat-form-field appearance="fill">
       <mat-label>{{ 'CERTIFICATES.NAME' | translate }}</mat-label>
       <mat-select formControlName="certificateType" required>
-        <mat-option *ngFor="let type of certificateTypes" [value]="type">
+        <mat-select-trigger>
+          {{ getCertificateTypeName(certificateForm.get('certificateType')?.value) }}
+        </mat-select-trigger>
+        <mat-option *ngFor="let type of certificateTypes" [value]="type.id">
           <div class="certificate-option">
             <span>{{ type.name }}</span>
             <div class="description">{{ type.description }}</div>

@@ -7,13 +7,14 @@ import { CrewService } from '@services/crew.service';
 import { CertificateService } from '@services/certificate.service';
 import { MatListModule } from '@angular/material/list';
 import { CrewMember } from '@shared/models/crew-member.model';
-import { Certificate } from '@models/certificate.model';
+import { CertificateDetails } from '@models/certificate.model';
 import { MatIconModule } from '@angular/material/icon';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatDialog } from '@angular/material/dialog';
 import { AddCertificateModalComponent } from '../../certificate/add-certificate-modal/add-certificate-modal.component';
+import { CertificateModalComponent } from '@shared/components/certificate-modal/certificate-modal.component';
 import { MatButtonModule } from '@angular/material/button';
-import { Currency, getCurrencyDetailById, getCurrencyCodeById } from '@shared/enums/currency.enum';
+import { Currency, getCurrencyDetailById } from '@shared/enums/currency.enum';
 
 @Component({
   selector: 'app-crew-card',
@@ -26,16 +27,17 @@ import { Currency, getCurrencyDetailById, getCurrencyCodeById } from '@shared/en
     MatCardModule,
     MatListModule,
     MatIconModule,
-    MatCardModule,
     MatButtonModule,
-    TranslateModule
+    TranslateModule,
+    CertificateModalComponent
   ]
 })
 export class CrewCardComponent implements OnInit {
   id: number = 0;
   crewMember: CrewMember | undefined;
-  crewCertificates: Certificate[] = [];
-  selectedTabIndex: number = 0; // Varsayılan olarak ilk sekme (Crew Details) seçili
+  crewCertificates: CertificateDetails[] = [];
+  hasCertificates: boolean = false;
+  selectedTabIndex: number = 0;
 
   constructor(
     private route: ActivatedRoute,
@@ -48,27 +50,43 @@ export class CrewCardComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // URL'deki ID'yi al
     const paramId = this.route.snapshot.paramMap.get('id');
     this.id = paramId ? +paramId : 0;
+    console.log('CrewCardComponent initialized with ID:', this.id);
 
-    // Crew bilgilerini getir
-    this.crewService.getCrewList().subscribe(crewList => {
-      this.crewMember = crewList.find(member => member.id === this.id);
-      console.log('Crew Member:', this.crewMember);
-    });
-
-    // Sertifikaları getir
+    this.loadCrewMember();
     this.loadCertificates();
   }
 
-  loadCertificates(): void {
-    console.log('Loading certificates for crew member ID:', this.id);
-    this.certificateService.getCertificatesByCrewMember(this.id).subscribe(certificates => {
-      this.crewCertificates = certificates;
-      console.log('Crew Certificates:', this.crewCertificates);
+  loadCrewMember(): void {
+    this.crewService.getCrewList().subscribe({
+      next: (crewList) => {
+        this.crewMember = crewList.find(member => member.id === this.id);
+        if (!this.crewMember) {
+          console.error('Crew member not found for ID:', this.id);
+        } else {
+          console.log('Crew member loaded:', this.crewMember);
+        }
+      },
+      error: (err) => {
+        console.error('Error loading crew list:', err);
+      }
     });
-    console.log('Certificates loaded');
+  }
+
+  loadCertificates(): void {
+    this.certificateService.getCertificatesByCrewMember(this.id).subscribe({
+      next: (certificates) => {
+        this.crewCertificates = certificates;
+        this.hasCertificates = certificates.length > 0;
+        console.log('Certificates loaded for crew member ID:', this.id, this.crewCertificates);
+      },
+      error: (err) => {
+        console.error('Error loading certificates:', err);
+        this.crewCertificates = [];
+        this.hasCertificates = false;
+      }
+    });
   }
 
   navigateToCrewList(): void {
@@ -83,20 +101,11 @@ export class CrewCardComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
-        this.certificateService.addCertificate(result);
-
-        this.loadCertificates(); // Sertifika listesini güncelle
+        this.loadCertificates();
       }
     });
   }
 
-  deleteCertificate(certificateId: number): void {
-    this.certificateService.deleteCertificate(certificateId);
-    console.log('Certificate deleted');
-    this.loadCertificates(); // Sertifika listesini güncelle
-  }
-  
-  // Sekme değiştiğinde çağrılacak metod
   onTabChange(index: number): void {
     this.selectedTabIndex = index;
     console.log('Selected tab index:', this.selectedTabIndex);
@@ -106,14 +115,13 @@ export class CrewCardComponent implements OnInit {
     if (!currency) return '';
     return this.getCurrencyDetail(currency).symbol;
   }
-  
+
   getCurrencyName(currency?: Currency): string {
     if (!currency) return '';
     return this.getCurrencyDetail(currency).name;
   }
-  
+
   getCurrencyDetail(currency: Currency) {
     return getCurrencyDetailById(currency);
   }
-  
 }

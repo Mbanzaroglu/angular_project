@@ -12,7 +12,7 @@ import { CrewService } from '@services/crew.service';
 import { CrewMember } from '@shared/models/crew-member.model';
 import { IncomeSummary } from '@models/income-summary.model';
 import { Observable, BehaviorSubject, Subscription } from 'rxjs';
-import { CertificateModalComponent } from 'app/features/certificate/certificate-modal/certificate-modal.component';
+import { CertificateModalComponent } from '@shared/components/certificate-modal/certificate-modal.component';
 import { Router, RouterModule } from '@angular/router';
 import { CrewModalComponent } from '../crew-modal/crew-modal.component';
 import { CertificateService } from '@shared/services/certificate.service';
@@ -36,7 +36,7 @@ import { Currency, getCurrencyDetailById, getCurrencyCodeById } from '@shared/en
     RouterModule
   ]
 })
-export class CrewListComponent implements OnInit{
+export class CrewListComponent implements OnInit, OnDestroy {
   displayedColumns: string[] = ['firstName', 'lastName', 'nationality', 'title', 'daysOnBoard', 'dailyRate', 'currency', 'totalIncome', 'certificates', 'action'];
 
   dataSource$: BehaviorSubject<CrewMember[]> = new BehaviorSubject<CrewMember[]>([]);
@@ -59,6 +59,7 @@ export class CrewListComponent implements OnInit{
   ngOnInit(): void {
     // crewList$’a abone ol ve dataSource$’ı güncelle
     this.crewListSubscription = this.crewService.getCrewList().subscribe(data => {
+      console.log('Crew list loaded:', data);
       this.dataSource$.next(data);
     });
 
@@ -67,6 +68,12 @@ export class CrewListComponent implements OnInit{
     this.crewService.getCurrencies().subscribe(currencies => {
       this.currencies = currencies;
     });
+  }
+
+  ngOnDestroy(): void {
+    if (this.crewListSubscription) {
+      this.crewListSubscription.unsubscribe();
+    }
   }
 
   openCertificateModal(crew: CrewMember) {
@@ -113,7 +120,6 @@ export class CrewListComponent implements OnInit{
 
   deleteCrew(element: CrewMember) {
     this.crewService.deleteCrewMember(element.id);
-    // incomeSummary$ zaten güncellenecek, manuel güncelleme yapmaya gerek yok
   }
 
   editCrew(element: CrewMember) {
