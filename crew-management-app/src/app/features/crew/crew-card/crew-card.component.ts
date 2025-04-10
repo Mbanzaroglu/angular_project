@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { MatTabsModule } from '@angular/material/tabs';
@@ -33,6 +33,9 @@ import { Currency, getCurrencyDetailById } from '@shared/enums/currency.enum';
   ]
 })
 export class CrewCardComponent implements OnInit {
+
+  @ViewChild(CertificateModalComponent) certificateModalComponent?: CertificateModalComponent;
+
   id: number = 0;
   crewMember: CrewMember | undefined;
   crewCertificates: CertificateDetails[] = [];
@@ -102,6 +105,8 @@ export class CrewCardComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       if (result) {
         this.loadCertificates();
+        this.certificateModalComponent?.loadCertificates(this.id); // Sayfa içindeki tabloyu da yenile
+
       }
     });
   }
