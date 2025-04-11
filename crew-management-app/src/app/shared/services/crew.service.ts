@@ -121,7 +121,7 @@ export class CrewService {
   addCrewMember(newCrew: CrewMember): void {
     console.log('Adding new crew member:', newCrew);
     newCrew.totalIncome = newCrew.daysOnBoard * newCrew.dailyRate;
-    this.crewList.push(newCrew);
+    this.crewList = [...this.crewList, newCrew];
     this.originalDailyRates.set(newCrew.id, { value: newCrew.dailyRate, currency: newCrew.currency });
     this.originalTotalIncomes.set(newCrew.id, { value: newCrew.totalIncome, currency: newCrew.currency });
     this.crewListSubject.next(this.crewList);
