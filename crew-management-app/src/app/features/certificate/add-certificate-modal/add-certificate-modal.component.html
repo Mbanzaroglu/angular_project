@@ -44,7 +44,7 @@
 </mat-dialog-content>
 <mat-dialog-actions align="end">
   <button mat-button (click)="onCancel()">{{ 'CANCEL' | translate }}</button>
-  <button mat-raised-button color="primary" (click)="onSubmit()" [disabled]="!certificateForm.valid">
+  <button mat-raised-button color="primary" (click)="onSubmit()" [disabled]="certificateForm.valid">
     {{ 'SAVE' | translate }}
   </button>
 </mat-dialog-actions>
